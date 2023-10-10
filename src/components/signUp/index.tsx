@@ -2,6 +2,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -9,7 +11,14 @@ import {
   faApple,
 } from "@fortawesome/free-brands-svg-icons";
 
-export default function index() {
+export default function Signup() {
+  // const { isLoading, error, data } = useQuery({
+  //   queryKey: ["accountList"],
+  //   queryFn: () =>
+  //     fetch("http://localhost:5432/api/users?page=1&limit=10").then((res) =>
+  //       res.json()
+  //     ),
+  // });
   return (
     <section className="mx-auto md:p-0 p-4 grid place-items-center h-screen">
       <div className="md:shadow md:px-8 md:py-14 md:rounded-md">
