@@ -1,5 +1,4 @@
-"use server";
-
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountList } from "@/api/index";
 
