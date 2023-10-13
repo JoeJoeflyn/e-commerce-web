@@ -1,14 +1,22 @@
-"use server";
-
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountList } from "@/api/index";
 
+// export async function getStaticProps() {
+//   const posts = await getAccountList();
+//   return { props: { posts } };
+// }
+
 const AccountList = () => {
   const { data } = useQuery({
-    queryKey: ["accountList"],
-    queryFn: () => getAccountList(),
-    staleTime: 1000 * 60,
+    queryKey: ["accountlist"],
+    queryFn: getAccountList,
   });
+
+  //  const { data: otherData } = useQuery({
+  //    queryKey: ["posts-2"],
+  //    queryFn: getAccountList,
+  //  });
 
   console.log(data);
 

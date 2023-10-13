@@ -2,16 +2,14 @@ import Image from "next/image";
 import LogIn from "@/components/logIn";
 import SignUp from "@/components/signUp";
 import AccountList from "@/components/accountList";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
+import Providers from "./provider";
 
 export default function Home() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <Providers>
       {/* <LogIn /> */}
-      {/* <SignUp /> */}
-      <AccountList />
-    </QueryClientProvider>
+      <SignUp />
+      {/* <AccountList /> */}
+    </Providers>
   );
 }
