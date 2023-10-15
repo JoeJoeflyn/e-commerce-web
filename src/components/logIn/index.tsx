@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -27,164 +25,155 @@ export default function Login() {
     mutationFn: (user: { email: string; password: string }) => {
       return login(user);
     },
+    onSuccess(data) {
+      // Set token to localstorage
+      localStorage.setItem(data.user.id, data.token);
+      // Notify user for when successfully logged in
+      toast.success("You logged in successfully");
+    },
+    onError(error: { message: string }) {
+      toast.error(error?.message);
+    },
   });
-  // set token to localstorage
-  if (mutationUser?.data?.token) {
-    localStorage.setItem(
-      mutationUser?.data?.user.id,
-      mutationUser?.data?.token
-    );
-  }
-
-  // notification
-  mutationUser?.data?.error ? toast.error(mutationUser.data.error) : null;
-  mutationUser?.data?.user ? toast.success("Đăng nhập thành công") : null;
 
   return (
-    <>
-      <ToastContainer />
-      <section className="md:p-0 p-4 grid place-items-center h-screen">
-        <div className="md:shadow md:px-8 md:py-14 md:rounded-md">
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            validationSchema={LoginSchema}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              mutationUser.mutate({
-                email: values.email,
-                password: values.password,
-              });
+    <section className="md:p-0 p-4 grid place-items-center h-screen">
+      <div className="md:shadow md:px-8 md:py-14 md:rounded-md">
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={LoginSchema}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            mutationUser.mutate({
+              email: values.email,
+              password: values.password,
+            });
 
-              setSubmitting(false);
+            setSubmitting(false);
 
-              resetForm({
-                values: {
-                  email: "",
-                  password: "",
-                },
-              });
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              isSubmitting,
-            }) => (
-              <Form className="flex flex-col">
-                <p className="font-bold text-3xl mb-8">Đăng nhập</p>
-                <div
-                  className={`w-full ${
-                    errors.email && touched.email ? null : "mb-6"
-                  }`}
-                >
+            resetForm({
+              values: {
+                email: "",
+                password: "",
+              },
+            });
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            isSubmitting,
+          }) => (
+            <Form className="flex flex-col">
+              <p className="font-bold text-3xl mb-8">Đăng nhập</p>
+              <div
+                className={`w-full ${
+                  errors.email && touched.email ? null : "mb-6"
+                }`}
+              >
+                <Field
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                  className={`px-4 py-3 w-full border rounded-md focus:ring-2 focus:border-none ${
+                    errors.email && touched.email
+                      ? "border-pink-500 border-2 focus:ring-pink-500"
+                      : "focus:ring-[#f80]"
+                  } `}
+                />
+                {errors.email && touched.email ? (
+                  <div className="text-red-500 my-2">{errors.email}</div>
+                ) : null}
+              </div>
+              <div
+                className={`w-full ${
+                  errors.password && touched.password ? null : "mb-6"
+                }`}
+              >
+                <div className="relative">
                   <Field
-                    name="email"
-                    type="email"
-                    placeholder="Email"
+                    name="password"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.email}
+                    value={values.password}
                     className={`px-4 py-3 w-full border rounded-md focus:ring-2 focus:border-none ${
-                      errors.email && touched.email
+                      errors.password && touched.password
                         ? "border-pink-500 border-2 focus:ring-pink-500"
                         : "focus:ring-[#f80]"
                     } `}
+                    placeholder="Mật khẩu"
+                    type={togglePassword ? "password" : "text"}
                   />
-                  {errors.email && touched.email ? (
-                    <div className="text-red-500 my-2">{errors.email}</div>
-                  ) : null}
-                </div>
-                <div
-                  className={`w-full ${
-                    errors.password && touched.password ? null : "mb-6"
-                  }`}
-                >
-                  <div className="relative">
-                    <Field
-                      name="password"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                      className={`px-4 py-3 w-full border rounded-md focus:ring-2 focus:border-none ${
-                        errors.password && touched.password
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Mật khẩu"
-                      type={togglePassword ? "password" : "text"}
+                  {togglePassword ? (
+                    <FontAwesomeIcon
+                      onClick={() => setTogglePassword(false)}
+                      className="absolute w-4 top-1/3 right-3 cursor-pointer"
+                      icon={faEye}
                     />
-                    {togglePassword ? (
-                      <FontAwesomeIcon
-                        onClick={() => setTogglePassword(false)}
-                        className="absolute w-4 top-1/3 right-3 cursor-pointer"
-                        icon={faEye}
-                      />
-                    ) : (
-                      <FontAwesomeIcon
-                        onClick={() => setTogglePassword(true)}
-                        className="absolute w-4 top-1/3 right-3 cursor-pointer"
-                        icon={faEyeSlash}
-                      />
-                    )}
-                  </div>
-                  {errors.password && touched.password ? (
-                    <div className="text-red-500 my-2">{errors.password}</div>
-                  ) : null}
+                  ) : (
+                    <FontAwesomeIcon
+                      onClick={() => setTogglePassword(true)}
+                      className="absolute w-4 top-1/3 right-3 cursor-pointer"
+                      icon={faEyeSlash}
+                    />
+                  )}
                 </div>
-                <a href="#" className="text-blue-500 mb-4">
-                  Quên mật khẩu?
-                </a>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-[#f80] font-bold text-xl text-white py-3 rounded-md hover:opacity-60 uppercase"
-                >
-                  đăng nhập
-                </button>
-                <div className="relative flex py-5 items-center">
-                  <div className="flex-grow border-t border-gray-600"></div>
-                  <span className="flex-shrink mx-4 text-gray-600">
-                    Hoặc đăng nhập bằng
-                  </span>
-                  <div className="flex-grow border-t border-gray-600"></div>
+                {errors.password && touched.password ? (
+                  <div className="text-red-500 my-2">{errors.password}</div>
+                ) : null}
+              </div>
+              <a href="#" className="text-blue-500 mb-4">
+                Quên mật khẩu?
+              </a>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-[#f80] font-bold text-xl text-white py-3 rounded-md hover:opacity-60 uppercase"
+              >
+                đăng nhập
+              </button>
+              <div className="relative flex py-5 items-center">
+                <div className="flex-grow border-t border-gray-600"></div>
+                <span className="flex-shrink mx-4 text-gray-600">
+                  Hoặc đăng nhập bằng
+                </span>
+                <div className="flex-grow border-t border-gray-600"></div>
+              </div>
+              <div className="grid grid-cols-3 gap-2 mb-6">
+                <div className="border rounded-md flex justify-center gap-2 items-center px-4 py-2 cursor-pointer">
+                  <div className="text-blue-500">
+                    <FontAwesomeIcon width={20} height={20} icon={faFacebook} />
+                  </div>
+                  <span className="font-bold">Facebook</span>
                 </div>
-                <div className="grid grid-cols-3 gap-2 mb-6">
-                  <div className="border rounded-md flex justify-center gap-2 items-center px-4 py-2 cursor-pointer">
-                    <div className="text-blue-500">
-                      <FontAwesomeIcon
-                        width={20}
-                        height={20}
-                        icon={faFacebook}
-                      />
-                    </div>
-                    <span className="font-bold">Facebook</span>
+                <div className="border rounded-md flex justify-center items-center gap-2 px-4 py-2 cursor-pointer">
+                  <div className="text-red-500">
+                    <FontAwesomeIcon width={20} height={20} icon={faGoogle} />
                   </div>
-                  <div className="border rounded-md flex justify-center items-center gap-2 px-4 py-2 cursor-pointer">
-                    <div className="text-red-500">
-                      <FontAwesomeIcon width={20} height={20} icon={faGoogle} />
-                    </div>
-                    <span className="font-bold">Google</span>
-                  </div>
-                  <div className="border rounded-md flex justify-center gap-2 items-center px-4 py-2 cursor-pointer">
-                    <div>
-                      <FontAwesomeIcon width={20} height={20} icon={faApple} />
-                    </div>
-                    <span className="font-bold">Apple</span>
-                  </div>
+                  <span className="font-bold">Google</span>
                 </div>
-                <p className="flex gap-2 justify-center text-sm items-center">
-                  Chưa có tài khoản?
-                  <Link className="text-blue-500 font-bold" href="/signUp">
-                    Đăng ký tài khoản mới
-                  </Link>
-                </p>
-              </Form>
-            )}
-          </Formik>
-        </div>
-      </section>
-    </>
+                <div className="border rounded-md flex justify-center gap-2 items-center px-4 py-2 cursor-pointer">
+                  <div>
+                    <FontAwesomeIcon width={20} height={20} icon={faApple} />
+                  </div>
+                  <span className="font-bold">Apple</span>
+                </div>
+              </div>
+              <p className="flex gap-2 justify-center text-sm items-center">
+                Chưa có tài khoản?
+                <Link className="text-blue-500 font-bold" href="/signUp">
+                  Đăng ký tài khoản mới
+                </Link>
+              </p>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </section>
   );
 }
