@@ -1,12 +1,19 @@
 import Image from "next/image";
-import Login from "@/components/logIn";
-import Signup from "@/components/signUp";
+import LogIn from "@/components/logIn";
+import SignUp from "@/components/signUp";
+import AccountList from "@/components/accountList";
+import Providers from "./provider";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   return (
-    <main className="">
-      <Login />
-      {/* <Signup /> */}
-    </main>
+    <Providers>
+      <ToastContainer />
+      <LogIn />
+      {/* <SignUp /> */}
+      {/* <AccountList /> */}
+    </Providers>
   );
 }
