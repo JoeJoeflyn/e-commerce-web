@@ -2,34 +2,37 @@
 import React from "react";
 import Link from "next/link";
 
-import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faApple,
   faFacebook,
   faGoogle,
+  faApple,
 } from "@fortawesome/free-brands-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 import { Field, Form, Formik } from "formik";
 
-import { LoginSchema } from "@/schema/schema";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { login } from "@/api";
-import { useMutation } from "@tanstack/react-query";
+import { SignupSchema } from "@/schema/schema";
 
-export default function Login() {
+import { createAccount } from "@/api";
+
+import { toast } from "react-toastify";
+
+export default function Signup() {
   const [togglePassword, setTogglePassword] = React.useState(true);
 
-  const mutationUser = useMutation({
-    mutationFn: (user: { email: string; password: string }) => {
-      return login(user);
+  const mutationAccount = useMutation({
+    mutationFn: (newAccount: {
+      name: string;
+      email: string;
+      password: string;
+    }) => {
+      return createAccount(newAccount);
     },
-    onSuccess(data) {
-      // Set token to localstorage
-      localStorage.setItem(data.user.id, data.token);
-      // Notify user for when successfully logged in
-      toast.success("You logged in successfully");
+    onSuccess() {
+      toast.success("You signed up successfully");
     },
     onError(error: { message: string }) {
       toast.error(error?.message);
@@ -37,13 +40,14 @@ export default function Login() {
   });
 
   return (
-    <section className="md:p-0 p-4 grid place-items-center h-screen">
+    <section className="mx-auto md:p-0 p-4 grid place-items-center h-screen">
       <div className="md:shadow md:px-8 md:py-14 md:rounded-md">
         <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={LoginSchema}
+          initialValues={{ name: "", email: "", password: "" }}
+          validationSchema={SignupSchema}
           onSubmit={(values, { setSubmitting, resetForm }) => {
-            mutationUser.mutate({
+            mutationAccount.mutate({
+              name: values.name,
               email: values.email,
               password: values.password,
             });
@@ -52,6 +56,7 @@ export default function Login() {
 
             resetForm({
               values: {
+                name: "",
                 email: "",
                 password: "",
               },
@@ -67,15 +72,38 @@ export default function Login() {
             isSubmitting,
           }) => (
             <Form className="flex flex-col">
-              <p className="font-bold text-3xl mb-8">Đăng nhập</p>
+              <p className="font-bold text-3xl mb-8">Sign up</p>
+              <div
+                className={`w-full ${
+                  errors.name && touched.name ? null : "mb-6"
+                }`}
+              >
+                <Field
+                  name="name"
+                  focus="innerRef"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.name}
+                  className={`px-4 py-3 w-full border rounded-md focus:ring-2 focus:border-none ${
+                    errors.name && touched.name
+                      ? "border-pink-500 border-2 focus:ring-pink-500"
+                      : "focus:ring-[#f80]"
+                  } `}
+                  placeholder="Username"
+                  type="text"
+                />
+                {errors.name && touched.name ? (
+                  <div className="text-red-500 my-2">{errors.name}</div>
+                ) : null}
+              </div>
               <div
                 className={`w-full ${
                   errors.email && touched.email ? null : "mb-6"
                 }`}
               >
                 <Field
-                  name="email"
                   type="email"
+                  name="email"
                   placeholder="Email"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -106,7 +134,7 @@ export default function Login() {
                         ? "border-pink-500 border-2 focus:ring-pink-500"
                         : "focus:ring-[#f80]"
                     } `}
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
                     type={togglePassword ? "password" : "text"}
                   />
                   {togglePassword ? (
@@ -127,21 +155,32 @@ export default function Login() {
                   <div className="text-red-500 my-2">{errors.password}</div>
                 ) : null}
               </div>
-              <a href="#" className="text-blue-500 mb-4">
-                Quên mật khẩu?
-              </a>
+              <div className="flex space-x-4 items-start mb-6">
+                <input
+                  type="checkbox"
+                  className="text-[#f80] w-5 h-5 rounded focus:ring-0 m"
+                />
+                <p className="max-w-sm">
+                  By sign up, you have already read and approved our {""}
+                  <a className="text-blue-500" href="#">
+                    Terms of service
+                  </a>{" "}
+                  and{" "}
+                  <a className="text-blue-500" href="#">
+                    Privacy policies
+                  </a>
+                </p>
+              </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className="bg-[#f80] font-bold text-xl text-white py-3 rounded-md hover:opacity-60 uppercase"
               >
-                đăng nhập
+                sign up
               </button>
               <div className="relative flex py-5 items-center">
                 <div className="flex-grow border-t border-gray-600"></div>
-                <span className="flex-shrink mx-4 text-gray-600">
-                  Hoặc đăng nhập bằng
-                </span>
+                <span className="flex-shrink mx-4 text-gray-600">Or</span>
                 <div className="flex-grow border-t border-gray-600"></div>
               </div>
               <div className="grid grid-cols-3 gap-2 mb-6">
@@ -165,9 +204,9 @@ export default function Login() {
                 </div>
               </div>
               <p className="flex gap-2 justify-center text-sm items-center">
-                Chưa có tài khoản?
-                <Link className="text-blue-500 font-bold" href="/signUp">
-                  Đăng ký tài khoản mới
+                Already had an account?
+                <Link className="text-blue-500 font-bold" href="/login">
+                  Log in
                 </Link>
               </p>
             </Form>
