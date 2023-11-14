@@ -16,7 +16,7 @@ import { Field, Form, Formik } from "formik";
 
 import { SignupSchema } from "@/schema/schema";
 
-import { createAccount } from "@/api";
+import { createAccount } from "@/api/authentication";
 
 import { toast } from "react-toastify";
 

@@ -1,11 +1,3 @@
-export const getAccountList = async () => {
-  const dataList = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users?page=1&limit=10`
-  );
-
-  return { ...dataList };
-};
-
 export const createAccount = async (newAccount: {
   name: string;
   email: string;

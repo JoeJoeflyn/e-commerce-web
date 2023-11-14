@@ -15,7 +15,7 @@ import { Field, Form, Formik } from "formik";
 
 import { LoginSchema } from "@/schema/schema";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { login } from "@/api";
+import { login } from "@/api/authentication";
 import { useMutation } from "@tanstack/react-query";
 
 export default function Login() {
