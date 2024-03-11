@@ -3,12 +3,23 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faClose, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { Field, Form, Formik } from "formik";
+import { toast } from "react-toastify";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { ProductSchema } from "@/schema/schema";
-import { createProduct } from "@/api/product";
-import { useMutation } from "@tanstack/react-query";
+import { createProduct } from "@/api/productAPI";
+import { getCategories } from "@/api/categoryAPI";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export default function PostsProduct() {
+  const router = useRouter();
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    router.push("/login");
+  }
+
   const [previewImages, setPreviewImages] = React.useState<string[]>([]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,19 +41,24 @@ export default function PostsProduct() {
     setPreviewImages(updatedImages);
   };
 
+  const { data } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
   const { mutate } = useMutation({
     mutationFn: createProduct,
-    onSuccess(data) {
-      console.log(data);
+    onSuccess() {
+      toast.success("Created product successfully");
     },
     onError(error: { message: string }) {
-      console.log(error);
+      toast.error(error?.message);
     },
   });
 
   return (
     <>
-      <div className="container h-screen mx-auto grid place-items-center">
+      <div className="md:h-screen grid place-items-center">
         <Formik
           initialValues={{
             category: "",
@@ -91,12 +107,12 @@ export default function PostsProduct() {
             setFieldValue,
             isSubmitting,
           }) => (
-            <Form className="border rounded shadow-md grid grid-cols-3 justify-center p-4 gap-5">
+            <Form className="xl:shadow-md grid md:grid-cols-3 justify-center p-5 gap-5 rounded">
               <div>
                 <p className="text-xl font-medium">Product images</p>
                 {previewImages.length !== 0 ? (
                   <div className="grid grid-cols-3 gap-3 mt-5">
-                    <div className="relative border-dotted h-28 w-28 rounded-lg border-2 border-[#f80] bg-gray-100 flex justify-center items-center">
+                    <div className="relative border-dotted h-28 xl:w-28 rounded-lg border-2 border-[#f80] bg-gray-100 flex justify-center items-center">
                       <div className="absolute">
                         <div className="flex flex-col items-center">
                           <FontAwesomeIcon
@@ -122,7 +138,7 @@ export default function PostsProduct() {
                       />
                     </div>
                     {previewImages.map((imageUrl, index) => (
-                      <div key={index} className="relative h-28 w-28">
+                      <div key={index} className="relative h-28">
                         <Image
                           src={imageUrl}
                           alt={`Preview ${index}`}
@@ -131,6 +147,7 @@ export default function PostsProduct() {
                           className="border border-gray-300 border-solid w-full h-auto"
                         />
                         <button
+                          type="button"
                           onClick={() => handleRemoveImage(index)}
                           className="absolute -top-2 -right-2 bg-black text-white px-2 rounded-full"
                           style={{ zIndex: 1, borderRadius: "50%" }}
@@ -176,7 +193,7 @@ export default function PostsProduct() {
                 )}
               </div>
 
-              <div className="col-span-2">
+              <div className="md:col-span-2 grid gap-4">
                 <div>
                   <div className="relative">
                     <Field
@@ -193,9 +210,13 @@ export default function PostsProduct() {
                       } `}
                     >
                       <option value="" disabled hidden></option>
-                      <option value="1">USD</option>
-                      <option value="2">CAD</option>
-                      <option value="3">EUR</option>
+                      {data?.categories.map(
+                        (category: { id: number; name: string }) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        )
+                      )}
                     </Field>
                     <label
                       htmlFor="category"
@@ -212,248 +233,222 @@ export default function PostsProduct() {
                     ) : null}
                   </div>
                 </div>
-                <div className="mt-6 flex flex-col justify-between">
+                <div className="flex flex-col justify-between">
                   <p className="text-xl font-medium">Your detail information</p>
-                  <div
-                    className={`relative ${
-                      errors.name && touched.name ? "" : "mb-3"
-                    } mt-4`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="name"
-                      type="text"
-                      onBlur={handleBlur}
-                      value={values.name}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.name && touched.name
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="name"
-                      id="name"
-                    />
-                    <label
-                      htmlFor="name"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.name
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Name
-                    </label>
-                    {errors.name && touched.name ? (
-                      <div className="text-red-500 mt-2">{errors.name}</div>
-                    ) : null}
-                  </div>
-                  <div
-                    className={`relative ${
-                      errors.description && touched.description ? "" : "my-3"
-                    }`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="description"
-                      type="text"
-                      onBlur={handleBlur}
-                      value={values.description}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.description && touched.description
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Description"
-                      id="description"
-                    />
-                    <label
-                      htmlFor="description"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.description
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Description
-                    </label>
-                    {errors.description && touched.description ? (
-                      <div className="text-red-500 mt-2">
-                        {errors.description}
-                      </div>
-                    ) : null}
-                  </div>
-                  <div
-                    className={`relative ${
-                      errors.price && touched.price ? "" : "my-3"
-                    }`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="price"
-                      type="number"
-                      onBlur={handleBlur}
-                      value={values.price}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.price && touched.price
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Price"
-                      id="price"
-                    />
-                    <label
-                      htmlFor="price"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.price
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Price
-                    </label>
-                    {errors.price && touched.price ? (
-                      <div className="text-red-500 my-2">{errors.price}</div>
-                    ) : null}
-                  </div>
-                  <div
-                    className={`relative ${
-                      errors.discount && touched.discount ? "" : "my-3"
-                    }`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="discount"
-                      type="number"
-                      onBlur={handleBlur}
-                      value={values.discount}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.discount && touched.discount
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Discount"
-                      id="discount"
-                    />
-                    <label
-                      htmlFor="discount"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.discount
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Discount
-                    </label>
-                    {errors.discount && touched.discount ? (
-                      <div className="text-red-500 my-2">{errors.discount}</div>
-                    ) : null}
-                  </div>
-                  <div
-                    className={`relative ${
-                      errors.quantity && touched.quantity ? "" : "my-3"
-                    }`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="quantity"
-                      type="number"
-                      onBlur={handleBlur}
-                      value={values.quantity}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.quantity && touched.quantity
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Quantity"
-                      id="quantity"
-                    />
-                    <label
-                      htmlFor="quantity"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.quantity
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Quantity
-                    </label>
-                    {errors.quantity && touched.quantity ? (
-                      <div className="text-red-500 my-2">{errors.quantity}</div>
-                    ) : null}
-                  </div>
-                  <div
-                    className={`relative ${
-                      errors.contact && touched.contact ? "" : "my-3"
-                    }`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="contact"
-                      type="text"
-                      onBlur={handleBlur}
-                      value={values.contact}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.contact && touched.contact
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Contact"
-                      id="contact"
-                    />
-                    <label
-                      htmlFor="contact"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.contact
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Contact
-                    </label>
-                    {errors.contact && touched.contact ? (
-                      <div className="text-red-500 my-2">{errors.contact}</div>
-                    ) : null}
-                  </div>
-                  <div
-                    className={`relative ${
-                      errors.location && touched.location ? "" : "my-3"
-                    }`}
-                  >
-                    <Field
-                      onChange={handleChange}
-                      name="location"
-                      type="text"
-                      onBlur={handleBlur}
-                      value={values.location}
-                      className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
-                        errors.location && touched.location
-                          ? "border-pink-500 border-2 focus:ring-pink-500"
-                          : "focus:ring-[#f80]"
-                      } `}
-                      placeholder="Location"
-                      id="location"
-                    />
-                    <label
-                      htmlFor="location"
-                      className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
-                        values.location
-                          ? "-translate-y-2 bg-white text-xs"
-                          : "translate-y-2"
-                      }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
-                    >
-                      Location
-                    </label>
-                    {errors.location && touched.location ? (
-                      <div className="text-red-500 my-2">{errors.location}</div>
-                    ) : null}
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-[#f80] w-full mt-2 font-bold text-xl text-white py-2 rounded-md hover:opacity-60 uppercase"
-                  >
-                    {isSubmitting ? "Submitting..." : "Post"}
-                  </button>
                 </div>
+                <div
+                  className={`relative ${
+                    errors.name && touched.name ? "" : ""
+                  }`}
+                >
+                  <Field
+                    onChange={handleChange}
+                    name="name"
+                    type="text"
+                    onBlur={handleBlur}
+                    value={values.name}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.name && touched.name
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="name"
+                    id="name"
+                  />
+                  <label
+                    htmlFor="name"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.name
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Name
+                  </label>
+                  <ErrorMessage name="name">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <div className="relative">
+                  <Field
+                    onChange={handleChange}
+                    name="description"
+                    type="text"
+                    onBlur={handleBlur}
+                    value={values.description}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.description && touched.description
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="Description"
+                    id="description"
+                  />
+                  <label
+                    htmlFor="description"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.description
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Description
+                  </label>
+                  <ErrorMessage name="description">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <div className="relative">
+                  <Field
+                    onChange={handleChange}
+                    name="price"
+                    type="number"
+                    onBlur={handleBlur}
+                    value={values.price}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.price && touched.price
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="Price"
+                    id="price"
+                  />
+                  <label
+                    htmlFor="price"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.price
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Price
+                  </label>
+                  <ErrorMessage name="price">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <div className="relative">
+                  <Field
+                    onChange={handleChange}
+                    name="discount"
+                    type="number"
+                    onBlur={handleBlur}
+                    value={values.discount}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.discount && touched.discount
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="Discount"
+                    id="discount"
+                  />
+                  <label
+                    htmlFor="discount"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.discount
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Discount
+                  </label>
+                  <ErrorMessage name="discount">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <div className="relative">
+                  <Field
+                    onChange={handleChange}
+                    name="quantity"
+                    type="number"
+                    onBlur={handleBlur}
+                    value={values.quantity}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.quantity && touched.quantity
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="Quantity"
+                    id="quantity"
+                  />
+                  <label
+                    htmlFor="quantity"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.quantity
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Quantity
+                  </label>
+                  <ErrorMessage name="quantity">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <div className="relative">
+                  <Field
+                    onChange={handleChange}
+                    name="contact"
+                    type="text"
+                    onBlur={handleBlur}
+                    value={values.contact}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.contact && touched.contact
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="Contact"
+                    id="contact"
+                  />
+                  <label
+                    htmlFor="contact"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.contact
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Contact
+                  </label>
+                  <ErrorMessage name="contact">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <div className="relative">
+                  <Field
+                    onChange={handleChange}
+                    name="location"
+                    type="text"
+                    onBlur={handleBlur}
+                    value={values.location}
+                    className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
+                      errors.location && touched.location
+                        ? "border-pink-500 border-2 focus:ring-pink-500"
+                        : "focus:ring-[#f80]"
+                    } `}
+                    placeholder="Location"
+                    id="location"
+                  />
+                  <label
+                    htmlFor="location"
+                    className={`absolute left-0 ml-1  px-3 peer-placeholder-shown:text-base duration-100 ease-linear text-gray-500 peer-focus:ml-1 peer-focus:bg-white ${
+                      values.location
+                        ? "-translate-y-2 bg-white text-xs"
+                        : "translate-y-2"
+                    }  peer-focus:-translate-y-2 peer-focus:px-3 peer-focus:text-xs`}
+                  >
+                    Location
+                  </label>
+                  <ErrorMessage name="location">
+                    {(msg) => <div className="text-red-500">{msg}</div>}
+                  </ErrorMessage>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-[#f80] w-full mt-2 font-bold text-xl text-white py-2 rounded-md hover:opacity-60 uppercase"
+                >
+                  {isSubmitting ? "Submitting..." : "Post"}
+                </button>
               </div>
             </Form>
           )}

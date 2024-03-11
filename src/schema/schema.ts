@@ -21,8 +21,8 @@ export const LoginSchema = Yup.object().shape({
 export const ProductSchema = Yup.object().shape({
   category: Yup.string().required("Category is required!"),
   name: Yup.string()
-    .max(50, "Your Productname too Long!")
-    .required("Productname is required!"),
+    .max(50, "Your Product name too Long!")
+    .required("Product name is required!"),
   description: Yup.string().required("Description is required!"),
   price: Yup.number().required("Price is required!"),
   discount: Yup.number().required("Discount is required!"),
