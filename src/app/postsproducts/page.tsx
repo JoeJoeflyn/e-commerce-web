@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faClose, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
@@ -14,11 +14,13 @@ import { useRouter } from "next/navigation";
 export default function PostsProduct() {
   const router = useRouter();
 
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  if (!token) {
-    router.push("/login");
-  }
+    if (!token) {
+      router.push("/login");
+    }
+  }, []);
 
   const [previewImages, setPreviewImages] = React.useState<string[]>([]);
 
