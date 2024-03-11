@@ -29,7 +29,6 @@ export const createProduct = async (newProduct: {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
     method: "POST",
     body: formdata,
-    redirect: "follow",
   });
 
   const parseResponse = await response.json();

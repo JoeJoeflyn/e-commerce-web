@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 
+import { SyncLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +19,11 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { login } from "@/api/authentication";
 import { useMutation } from "@tanstack/react-query";
 
+import { useRouter } from "next/navigation";
+
 export default function Login() {
+  const router = useRouter();
+
   const [togglePassword, setTogglePassword] = React.useState(true);
 
   const mutationUser = useMutation({
@@ -27,8 +32,10 @@ export default function Login() {
     },
     onSuccess(data) {
       // Set token to localstorage
-      localStorage.setItem(data.user.id, data.token);
+      localStorage.setItem("token", data.token);
       // Notify user for when successfully logged in
+      router.push("/");
+
       toast.success("You logged in successfully");
     },
     onError(error: { message: string }) {
@@ -43,19 +50,21 @@ export default function Login() {
           initialValues={{ email: "", password: "" }}
           validationSchema={LoginSchema}
           onSubmit={(values, { setSubmitting, resetForm }) => {
-            mutationUser.mutate({
-              email: values.email,
-              password: values.password,
-            });
-
-            setSubmitting(false);
-
-            resetForm({
-              values: {
-                email: "",
-                password: "",
+            mutationUser.mutate(
+              {
+                email: values.email,
+                password: values.password,
               },
-            });
+              {
+                onSuccess: () => {
+                  setSubmitting(false);
+                  resetForm();
+                },
+                onError: () => {
+                  setSubmitting(false);
+                },
+              }
+            );
           }}
         >
           {({
@@ -135,7 +144,7 @@ export default function Login() {
                 disabled={isSubmitting}
                 className="bg-[#f80] font-bold text-xl text-white py-3 rounded-md hover:opacity-60 uppercase"
               >
-                Log in
+                {isSubmitting ? <SyncLoader color="#ffffff" /> : "Log in"}
               </button>
               <div className="relative flex py-5 items-center">
                 <div className="flex-grow border-t border-gray-600"></div>
