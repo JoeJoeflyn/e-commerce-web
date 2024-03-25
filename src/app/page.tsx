@@ -2,11 +2,6 @@ import { getAllCategories, getAllProducts } from "@/api";
 import Home from "@/components/homePage";
 
 export default async function Page() {
-  // const categories: Category[] = await getAllCategories(); //5s
-  // const products: Product[] = await getAllProducts({
-  //   page: 1,
-  // }); //5s;
-
   const results = await Promise.allSettled([
     getAllCategories(),
     getAllProducts({
