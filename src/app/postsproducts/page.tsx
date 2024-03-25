@@ -144,13 +144,13 @@ export default function PostsProduct() {
                     </div>
                     {previewImages.map((imageUrl, index) => (
                       <div key={index} className="relative h-28">
-                        <Image
+                        {/* <Image
                           src={imageUrl}
                           alt={`Preview ${index}`}
                           layout="fill"
                           objectFit="contain"
                           className="border border-gray-300 border-solid w-full h-auto"
-                        />
+                        /> */}
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(index)}

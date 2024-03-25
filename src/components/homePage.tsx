@@ -131,13 +131,13 @@ export default function Home({
                     >
                       <a href="#" className="flex flex-col items-center">
                         <div className="relative h-20 w-20">
-                          <Image
+                          {/* <Image
                             src={category.image}
                             className="object-cover rounded-3xl"
                             alt={category.name}
                             loading="lazy"
                             layout="fill"
-                          />
+                          /> */}
                         </div>
                         <p className="text-sm line-clamp-2 text-gray-600 mt-2">
                           {category.name}
@@ -174,13 +174,13 @@ export default function Home({
                       key={product.id}
                     >
                       <div className="relative w-full h-64">
-                        <Image
+                        {/* <Image
                           src={product.productImages[0].name}
                           className="object-cover"
                           alt={product.name}
                           loading="lazy"
                           layout="fill"
-                        />
+                        /> */}
                       </div>
                       <div className="px-4 py-4 flex flex-col gap-2">
                         <>
