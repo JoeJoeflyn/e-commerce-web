@@ -43,7 +43,7 @@ export default function DetailPage({ product }: { product: Product }) {
             modules={[Autoplay, Pagination, Navigation]}
             className="mySwiper relative"
           >
-            {product.productImages.map((image) => (
+            {product?.productImages.map((image) => (
               <SwiperSlide key={image.id}>
                 <div className="relative h-80">
                   <Image
@@ -57,28 +57,28 @@ export default function DetailPage({ product }: { product: Product }) {
               </SwiperSlide>
             ))}
             <div className="bg-black opacity-70 w-full text-white text-right p-0.5">
-              <p className="mr-2">Posted at {timeFormat(product.createdAt)}</p>
+              <p className="mr-2">Posted at {timeFormat(product?.createdAt)}</p>
             </div>
           </Swiper>
           <div>
             <div className="flex flex-col gap-3 mt-2">
-              <p className="font-medium">{product.name}</p>
+              <p className="font-medium">{product?.name}</p>
               <div className="font-bold flex gap-2">
                 <p className="text-[#d70018]">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
-                  }).format(product.price - product.discountPrice)}
+                  }).format(product?.price - product?.discountPrice)}
                 </p>
-                <p className="text-[#707070]">
+                <p className="text-[#707070] line-through">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
-                  }).format(product.price)}
+                  }).format(product?.price)}
                 </p>
               </div>
               <p className="text-sm">
-                {product.description} lorem ipsum dolor sit amet consectetur
+                {product?.description} lorem ipsum dolor sit amet consectetur
                 adipisicing elit. Cumque delectus labore dicta voluptatum
                 exercitationem dignissimos ipsam ad culpa beatae. Exercitationem
                 temporibus ipsa itaque? Magni nihil, culpa voluptatem
@@ -87,19 +87,19 @@ export default function DetailPage({ product }: { product: Product }) {
               <div className="grid grid-cols-2 gap-2 text-sm font-light">
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faPhone} />
-                  Phone: {product.contact}
+                  Phone: {product?.contact}
                 </p>
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faTag} />
-                  Type: {product.category.name}
+                  Type: {product?.category.name}
                 </p>
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faLocationDot} />
-                  Location:yarn {product.location}
+                  Location:yarn {product?.location}
                 </p>
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faSquareCheck} />
-                  {product.status.trim().toLowerCase() === "published" &&
+                  {product?.status.trim().toLowerCase() === "published" &&
                     "verified"}
                 </p>
               </div>
@@ -151,7 +151,7 @@ export default function DetailPage({ product }: { product: Product }) {
             </div>
             <div className="flex items-center gap-2 bg-[#61a937] hover:bg-[#3c763d] text-white py-2 px-3 rounded cursor-pointer">
               <FontAwesomeIcon width={16} icon={faPhone} />
-              <span>{product.contact}</span>
+              <span>{product?.contact}</span>
             </div>
           </div>
         </div>

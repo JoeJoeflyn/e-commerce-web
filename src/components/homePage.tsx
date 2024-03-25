@@ -52,7 +52,7 @@ export default function Home({
 
   return (
     <>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto bg-white">
         <div className="relative w-full p-3 shadow">
           <Swiper
             spaceBetween={30}
