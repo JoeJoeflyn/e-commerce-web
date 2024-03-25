@@ -121,7 +121,7 @@ export default function Home({
                       </a>
                     </div>
                   ))
-              : getCategories?.categories.map((category: Category) => {
+              : getCategories?.categories?.map((category: Category) => {
                   return (
                     <div
                       key={category.id}
@@ -131,13 +131,13 @@ export default function Home({
                     >
                       <a href="#" className="flex flex-col items-center">
                         <div className="relative h-20 w-20">
-                          {/* <Image
-                            src={category.image}
+                          <Image
+                            src={category?.image ?? "images/category.jpeg"}
                             className="object-cover rounded-3xl"
                             alt={category.name}
                             loading="lazy"
                             layout="fill"
-                          /> */}
+                          />
                         </div>
                         <p className="text-sm line-clamp-2 text-gray-600 mt-2">
                           {category.name}
@@ -164,7 +164,7 @@ export default function Home({
                       </div>
                     </div>
                   ))
-              : getProducts?.products.map((product: Product) => {
+              : getProducts?.products?.map((product: Product) => {
                   return (
                     <Link
                       href={`/products/${product.id}`}
@@ -174,13 +174,16 @@ export default function Home({
                       key={product.id}
                     >
                       <div className="relative w-full h-64">
-                        {/* <Image
-                          src={product.productImages[0].name}
+                        <Image
+                          src={
+                            product?.productImages?.[0]?.name ??
+                            "images/empty-product.jpeg"
+                          }
                           className="object-cover"
                           alt={product.name}
                           loading="lazy"
                           layout="fill"
-                        /> */}
+                        />
                       </div>
                       <div className="px-4 py-4 flex flex-col gap-2">
                         <>
