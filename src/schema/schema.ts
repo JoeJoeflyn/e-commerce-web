@@ -24,9 +24,9 @@ export const ProductSchema = Yup.object().shape({
     .max(50, "Your Product name too Long!")
     .required("Product name is required!"),
   description: Yup.string().required("Description is required!"),
-  price: Yup.number().required("Price is required!"),
-  discount: Yup.number().required("Discount is required!"),
-  quantity: Yup.number().required("Quantity is required!"),
+  price: Yup.string().required("Price is required!"),
+  discount: Yup.string().required("Discount is required!"),
+  quantity: Yup.string().required("Quantity is required!"),
   contact: Yup.string().required("Contact is required!"),
   location: Yup.string().required("Location is required!"),
 });

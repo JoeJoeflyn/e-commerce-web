@@ -1,22 +1,17 @@
 "use client";
-import React from "react";
 import Link from "next/link";
+import React from "react";
 
 import { SyncLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faApple,
-  faFacebook,
-  faGoogle,
-} from "@fortawesome/free-brands-svg-icons";
 
 import { Field, Form, Formik } from "formik";
 
+import { login } from "@/api";
 import { LoginSchema } from "@/schema/schema";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { login } from "@/api/authentication";
 import { useMutation } from "@tanstack/react-query";
 
 import { useRouter } from "next/navigation";
@@ -151,7 +146,7 @@ export default function Login() {
                 <span className="flex-shrink mx-4 text-gray-600">Or</span>
                 <div className="flex-grow border-t border-gray-600"></div>
               </div>
-              <div className="grid grid-cols-3 gap-2 mb-6">
+              {/* <div className="grid grid-cols-3 gap-2 mb-6">
                 <div className="border rounded-md flex justify-center gap-2 items-center px-4 py-2 cursor-pointer">
                   <div className="text-blue-500">
                     <FontAwesomeIcon width={20} height={20} icon={faFacebook} />
@@ -170,7 +165,7 @@ export default function Login() {
                   </div>
                   <span className="font-bold">Apple</span>
                 </div>
-              </div>
+              </div> */}
               <p className="flex gap-2 justify-center text-sm items-center">
                 Don&apos;t have an account yet?
                 <Link className="text-blue-500 font-bold" href="/signup">

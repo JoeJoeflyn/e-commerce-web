@@ -7,7 +7,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn2.cellphones.com.vn",
+        hostname: "res.cloudinary.com",
         port: "",
       },
     ],

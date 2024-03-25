@@ -16,11 +16,15 @@ import { Field, Form, Formik } from "formik";
 
 import { SignupSchema } from "@/schema/schema";
 
-import { createAccount } from "@/api/authentication";
+import { createAccount } from "@/api";
 
 import { toast } from "react-toastify";
 
+import { useRouter } from "next/navigation";
+
 export default function Signup() {
+  const router = useRouter();
+
   const [togglePassword, setTogglePassword] = React.useState(true);
 
   const mutationAccount = useMutation({
@@ -33,6 +37,8 @@ export default function Signup() {
     },
     onSuccess() {
       toast.success("You signed up successfully");
+
+      router.push("/login");
     },
     onError(error: { message: string }) {
       toast.error(error?.message);
@@ -183,7 +189,7 @@ export default function Signup() {
                 <span className="flex-shrink mx-4 text-gray-600">Or</span>
                 <div className="flex-grow border-t border-gray-600"></div>
               </div>
-              <div className="grid grid-cols-3 gap-2 mb-6">
+              {/* <div className="grid grid-cols-3 gap-2 mb-6">
                 <div className="border rounded-md flex justify-center gap-2 items-center px-4 py-2 cursor-pointer">
                   <div className="text-blue-500">
                     <FontAwesomeIcon width={20} height={20} icon={faFacebook} />
@@ -202,7 +208,7 @@ export default function Signup() {
                   </div>
                   <span className="font-bold">Apple</span>
                 </div>
-              </div>
+              </div> */}
               <p className="flex gap-2 justify-center text-sm items-center">
                 Already had an account?
                 <Link className="text-blue-500 font-bold" href="/login">

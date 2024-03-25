@@ -10,7 +10,7 @@ export default function Navbar() {
   const noNav = ["/login", "/signup"];
 
   return noNav.includes(pathname) ? null : (
-    <>
+    <div>
       <ul className="flex justify-between gap-5 bg-[#f4b919] p-5">
         <li className="flex items-center gap-2 hover:text-gray-700 cursor-pointer mr-6">
           <FontAwesomeIcon width={15} height={15} icon={faHome} />
@@ -25,6 +25,6 @@ export default function Navbar() {
           <Link href="/login">Login</Link>
         </li>
       </ul>
-    </>
+    </div>
   );
 }

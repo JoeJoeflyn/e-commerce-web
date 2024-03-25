@@ -1,13 +1,15 @@
-export const getCategories = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/categories`
-  );
+import axios from "axios";
 
-  const result = await response.json();
+export const getAllCategories = async () => {
+  try {
+    const { data } = await axios(
+      `${process.env.NEXT_PUBLIC_API_URL}/categories`
+    );
 
-  if (!response?.ok) {
-    throw new Error(result?.error ?? "Server Error, Please try again later!");
+    return data;
+  } catch (error) {
+    if (error) {
+      throw new Error("Server Error, Please try again later!");
+    }
   }
-
-  return result;
 };

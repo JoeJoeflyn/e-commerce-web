@@ -7,9 +7,10 @@ import { toast } from "react-toastify";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { ProductSchema } from "@/schema/schema";
 import { createProduct } from "@/api/productAPI";
-import { getCategories } from "@/api/categoryAPI";
+import { getAllCategories } from "@/api/categoryAPI";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { NumericFormat } from "react-number-format";
 
 export default function PostsProduct() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function PostsProduct() {
     if (!token) {
       router.push("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [previewImages, setPreviewImages] = React.useState<string[]>([]);
@@ -45,13 +47,14 @@ export default function PostsProduct() {
 
   const { data } = useQuery({
     queryKey: ["categories"],
-    queryFn: getCategories,
+    queryFn: getAllCategories,
   });
 
   const { mutate } = useMutation({
     mutationFn: createProduct,
     onSuccess() {
       toast.success("Created product successfully");
+      router.push("/");
     },
     onError(error: { message: string }) {
       toast.error(error?.message);
@@ -77,9 +80,9 @@ export default function PostsProduct() {
           onSubmit={(values, { setSubmitting, resetForm }) => {
             mutate({
               ...values,
-              price: +values.price,
-              discount: +values.discount,
-              quantity: +values.quantity,
+              price: +values.price.replace(/,/g, ""),
+              discount: +values.discount.replace(/,/g, ""),
+              quantity: +values.quantity.replace(/,/g, ""),
             });
 
             setSubmitting(false);
@@ -301,12 +304,14 @@ export default function PostsProduct() {
                   </ErrorMessage>
                 </div>
                 <div className="relative">
-                  <Field
-                    onChange={handleChange}
+                  <NumericFormat
+                    onChange={(e) => {
+                      setFieldValue("price", e.target.value);
+                    }}
                     name="price"
-                    type="number"
-                    onBlur={handleBlur}
                     value={values.price}
+                    thousandSeparator
+                    allowNegative={false}
                     className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
                       errors.price && touched.price
                         ? "border-pink-500 border-2 focus:ring-pink-500"
@@ -330,12 +335,13 @@ export default function PostsProduct() {
                   </ErrorMessage>
                 </div>
                 <div className="relative">
-                  <Field
+                  <NumericFormat
                     onChange={handleChange}
                     name="discount"
-                    type="number"
                     onBlur={handleBlur}
                     value={values.discount}
+                    allowNegative={false}
+                    thousandSeparator
                     className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
                       errors.discount && touched.discount
                         ? "border-pink-500 border-2 focus:ring-pink-500"
@@ -359,12 +365,13 @@ export default function PostsProduct() {
                   </ErrorMessage>
                 </div>
                 <div className="relative">
-                  <Field
+                  <NumericFormat
                     onChange={handleChange}
                     name="quantity"
-                    type="number"
                     onBlur={handleBlur}
                     value={values.quantity}
+                    allowNegative={false}
+                    thousandSeparator
                     className={`rounded peer w-full placeholder:text-transparent focus:border-none ${
                       errors.quantity && touched.quantity
                         ? "border-pink-500 border-2 focus:ring-pink-500"
