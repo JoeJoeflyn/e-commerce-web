@@ -36,7 +36,16 @@ export default function PostsProduct() {
       return URL.createObjectURL(file);
     });
 
-    setPreviewImages([...imageUrls, ...previewImages]);
+    if (previewImages.length < 6) {
+      if (previewImages.length + imageUrls.length > 6) {
+        setPreviewImages([...previewImages, imageUrls[0]]);
+        toast.error("Only 6 images can be uploaded");
+        return;
+      }
+      setPreviewImages([...imageUrls, ...previewImages]);
+    } else {
+      toast.error("Only 6 images can be uploaded");
+    }
   };
 
   const handleRemoveImage = (index: number) => {
@@ -61,9 +70,11 @@ export default function PostsProduct() {
     },
   });
 
+  console.log("image prview", previewImages);
+
   return (
     <>
-      <div className="md:h-screen grid place-items-center">
+      <div className="grid place-items-center my-10">
         <Formik
           initialValues={{
             category: "",
@@ -112,9 +123,9 @@ export default function PostsProduct() {
             setFieldValue,
             isSubmitting,
           }) => (
-            <Form className="xl:shadow-md grid md:grid-cols-3 justify-center p-5 gap-5 rounded">
+            <Form className="xl:shadow-md grid md:grid-cols-3 justify-center p-5 gap-5 rounded bg-white">
               <div>
-                <p className="text-xl font-medium">Product images</p>
+                <p className="text-base font-bold">Product images</p>
                 {previewImages.length !== 0 ? (
                   <div className="grid grid-cols-3 gap-3 mt-5">
                     <div className="relative border-dotted h-28 xl:w-28 rounded-lg border-2 border-[#f80] bg-gray-100 flex justify-center items-center">
@@ -238,8 +249,8 @@ export default function PostsProduct() {
                     ) : null}
                   </div>
                 </div>
-                <div className="flex flex-col justify-between">
-                  <p className="text-xl font-medium">Your detail information</p>
+                <div>
+                  <p className="text-lg font-bold">Your detail information</p>
                 </div>
                 <div
                   className={`relative ${
@@ -305,10 +316,9 @@ export default function PostsProduct() {
                 </div>
                 <div className="relative">
                   <NumericFormat
-                    onChange={(e) => {
-                      setFieldValue("price", e.target.value);
-                    }}
+                    onChange={handleChange}
                     name="price"
+                    onBlur={handleBlur}
                     value={values.price}
                     thousandSeparator
                     allowNegative={false}
@@ -454,7 +464,7 @@ export default function PostsProduct() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#f80] w-full mt-2 font-bold text-xl text-white py-2 rounded-md hover:opacity-60 uppercase"
+                  className="bg-[#f80] font-normal text-base text-white py-2 mt-2 rounded-md hover:opacity-60 uppercase"
                 >
                   {isSubmitting ? "Submitting..." : "Post"}
                 </button>

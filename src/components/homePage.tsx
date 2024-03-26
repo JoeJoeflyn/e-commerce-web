@@ -132,7 +132,7 @@ export default function Home({
                       <a href="#" className="flex flex-col items-center">
                         <div className="relative h-20 w-20">
                           <Image
-                            src={category?.image ?? "images/category.jpeg"}
+                            src={category?.image ?? "/images/category.jpeg"}
                             className="object-cover rounded-3xl"
                             alt={category.name}
                             loading="lazy"
@@ -177,7 +177,7 @@ export default function Home({
                         <Image
                           src={
                             product?.productImages?.[0]?.name ??
-                            "images/empty-product.jpeg"
+                            "/images/empty-product.jpeg"
                           }
                           className="object-cover"
                           alt={product.name}
@@ -190,12 +190,20 @@ export default function Home({
                           <div className="text-sm text-gray-600">
                             {product.name}
                           </div>
-                          <div className="flex items-baseline gap-2 text-red-600 font-bold">
-                            <p>
+                          <div className="font-bold flex items-baseline gap-2">
+                            <p className="text-[#d70018] font-bold">
                               {new Intl.NumberFormat("en-US", {
                                 style: "currency",
                                 currency: "USD",
-                              }).format(product.price)}
+                              }).format(
+                                product?.price - product?.discountPrice
+                              )}
+                            </p>
+                            <p className="text-[#707070] font-semibold text-sm line-through">
+                              {new Intl.NumberFormat("en-US", {
+                                style: "currency",
+                                currency: "USD",
+                              }).format(product?.price)}
                             </p>
                           </div>
                         </>

@@ -40,7 +40,7 @@ export default function Login() {
 
   return (
     <section className="md:p-0 p-4 grid place-items-center h-screen">
-      <div className="md:shadow md:px-8 md:py-14 md:rounded-md">
+      <div className="md:shadow md:px-8 md:py-14 md:rounded-md bg-white">
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={LoginSchema}

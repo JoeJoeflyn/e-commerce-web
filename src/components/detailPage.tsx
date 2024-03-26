@@ -22,10 +22,12 @@ import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "../app/globals.css";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 
 export default function DetailPage({ product }: { product: Product }) {
   return (
-    <div className="bg-white max-w-5xl mx-auto my-5 h-screen">
+    <div className="bg-white max-w-5xl mx-auto my-5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-5 border">
         <div className="col-span-2">
           <Swiper
@@ -46,13 +48,17 @@ export default function DetailPage({ product }: { product: Product }) {
             {product?.productImages.map((image) => (
               <SwiperSlide key={image.id}>
                 <div className="relative h-80">
-                  <Image
-                    className="p-3 shadow object-fill"
-                    src={image.name}
-                    layout="fill"
-                    alt={image.name}
-                    loading="lazy"
-                  />
+                  <PhotoProvider>
+                    <PhotoView src={image.name}>
+                      <Image
+                        className="p-3 shadow object-fill"
+                        src={image.name}
+                        layout="fill"
+                        alt={image.name}
+                        loading="lazy"
+                      />
+                    </PhotoView>
+                  </PhotoProvider>
                 </div>
               </SwiperSlide>
             ))}
@@ -63,27 +69,21 @@ export default function DetailPage({ product }: { product: Product }) {
           <div>
             <div className="flex flex-col gap-3 mt-2">
               <p className="font-medium">{product?.name}</p>
-              <div className="font-bold flex gap-2">
-                <p className="text-[#d70018]">
+              <div className="font-bold flex items-baseline gap-2">
+                <p className="text-[#d70018] font-bold">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
                   }).format(product?.price - product?.discountPrice)}
                 </p>
-                <p className="text-[#707070] line-through">
+                <p className="text-[#707070] font-semibold text-sm line-through">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
                   }).format(product?.price)}
                 </p>
               </div>
-              <p className="text-sm">
-                {product?.description} lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Cumque delectus labore dicta voluptatum
-                exercitationem dignissimos ipsam ad culpa beatae. Exercitationem
-                temporibus ipsa itaque? Magni nihil, culpa voluptatem
-                voluptatibus totam facere!
-              </p>
+              <p className="text-sm">{product?.description}</p>
               <div className="grid grid-cols-2 gap-2 text-sm font-light">
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faPhone} />
@@ -95,7 +95,7 @@ export default function DetailPage({ product }: { product: Product }) {
                 </p>
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faLocationDot} />
-                  Location:yarn {product?.location}
+                  Location: {product?.location}
                 </p>
                 <p className="flex items-center gap-2">
                   <FontAwesomeIcon width={16} icon={faSquareCheck} />
