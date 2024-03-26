@@ -36,13 +36,21 @@ export default function PostsProduct() {
       return URL.createObjectURL(file);
     });
 
+    const totalImages = previewImages.length + imageUrls.length;
+
+    if (totalImages > 6) {
+      toast.error("Only 6 images can be uploaded");
+      const remainingSpace = 6 - previewImages.length;
+      const imagesToAdd = imageUrls.slice(0, remainingSpace);
+
+      setPreviewImages([...previewImages, ...imagesToAdd]);
+      return;
+    }
+
     if (previewImages.length < 6) {
-      if (previewImages.length + imageUrls.length > 6) {
-        setPreviewImages([...previewImages, imageUrls[0]]);
-        toast.error("Only 6 images can be uploaded");
-        return;
-      }
-      setPreviewImages([...imageUrls, ...previewImages]);
+      const remainingSpace = 6 - previewImages.length;
+      const imagesToAdd = imageUrls.slice(0, remainingSpace);
+      setPreviewImages([...previewImages, ...imagesToAdd]);
     } else {
       toast.error("Only 6 images can be uploaded");
     }
@@ -69,8 +77,6 @@ export default function PostsProduct() {
       toast.error(error?.message);
     },
   });
-
-  console.log("image prview", previewImages);
 
   return (
     <>
@@ -162,6 +168,13 @@ export default function PostsProduct() {
                           objectFit="contain"
                           className="border border-gray-300 border-solid w-full h-auto"
                         />
+                        {index === 0 ? (
+                          <p className="absolute bottom-0 left-0 bg-black text-white text-xs text-center w-full p-1 opacity-80">
+                            Cover image
+                          </p>
+                        ) : (
+                          ""
+                        )}
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(index)}
@@ -188,8 +201,11 @@ export default function PostsProduct() {
                           width={50}
                           height={50}
                         />
-                        <span className="block text-gray-400 font-normal">
-                          Attach you files here
+                        <span className="block text-gray-400 font-bold text-xs">
+                          Attach your files here
+                        </span>
+                        <span className="text-gray-400 font-bold text-xs">
+                          Only 6 images can be uploaded
                         </span>
                       </div>
                     </div>

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { SyncLoader } from "react-spinners";
 import { toast } from "react-toastify";
@@ -19,6 +19,15 @@ import { useRouter } from "next/navigation";
 export default function Login() {
   const router = useRouter();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      router.back();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [togglePassword, setTogglePassword] = React.useState(true);
 
   const mutationUser = useMutation({
@@ -30,8 +39,9 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       // Notify user for when successfully logged in
       router.push("/");
-
-      toast.success("You logged in successfully");
+      setTimeout(() => {
+        toast.success("You logged in successfully");
+      }, 5 * 1000);
     },
     onError(error: { message: string }) {
       toast.error(error?.message);
@@ -53,7 +63,9 @@ export default function Login() {
               {
                 onSuccess: () => {
                   setSubmitting(false);
-                  resetForm();
+                  setTimeout(() => {
+                    resetForm();
+                  }, 5 * 1000);
                 },
                 onError: () => {
                   setSubmitting(false);
