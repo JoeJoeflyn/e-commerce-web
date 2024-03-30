@@ -1,28 +1,18 @@
 "use client";
-import React, { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faClose, faPlus } from "@fortawesome/free-solid-svg-icons";
-import Image from "next/image";
-import { toast } from "react-toastify";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { createProduct, getAllCategories } from "@/api/";
 import { ProductSchema } from "@/schema/schema";
-import { createProduct } from "@/api/productAPI";
-import { getAllCategories } from "@/api/categoryAPI";
+import { faClose, faImage, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { NumericFormat } from "react-number-format";
+import { toast } from "react-toastify";
 
-export default function PostsProduct() {
+export default function Sell() {
   const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      router.push("/login");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [previewImages, setPreviewImages] = React.useState<string[]>([]);
 

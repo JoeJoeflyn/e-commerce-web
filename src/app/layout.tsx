@@ -6,8 +6,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import StoreProvider from "@/providers/store.provider";
+import { PersistGate } from "redux-persist/integration/react";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin-ext"] });
 
 export const metadata: Metadata = {
   title: {
@@ -25,10 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-[#f4f4f4]`}>
-        <Navbar />
         <ToastContainer />
-        <Providers>{children}</Providers>
-        <Footer />
+        <Providers>
+          <StoreProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </StoreProvider>
+        </Providers>
       </body>
     </html>
   );

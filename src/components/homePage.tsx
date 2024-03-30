@@ -1,7 +1,7 @@
 "use client";
 import { getAllCategories, getAllProducts } from "@/api";
 import { Category, Product } from "@/shared/interfaces";
-import { timeFormat } from "@/utils";
+import { timeFormat } from "@/shared/utils";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faClock,
@@ -14,13 +14,13 @@ import Image from "next/image";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
+import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import Link from "next/link";
 
 export default function Home({
   categories,
@@ -35,7 +35,7 @@ export default function Home({
   const [category, setCategory] = React.useState([]);
 
   const { data: getCategories, isFetching: isFetchingCategories } = useQuery({
-    queryKey: ["categories", page, search, category],
+    queryKey: ["categories"],
     queryFn: () => getAllCategories(),
     initialData: {
       categories,
