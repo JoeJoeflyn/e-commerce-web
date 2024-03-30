@@ -57,7 +57,7 @@ export default function DetailPage({ product }: { product: Product }) {
                       <Image
                         className="p-3 shadow object-contain"
                         src={image.name}
-                        fill={true}
+                        layout="fill"
                         alt={image.name}
                         loading="lazy"
                       />
