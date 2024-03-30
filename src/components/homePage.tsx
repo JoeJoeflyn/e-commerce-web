@@ -1,7 +1,7 @@
 "use client";
 import { getAllCategories, getAllProducts } from "@/api";
 import { Category, Product } from "@/shared/interfaces";
-import { timeFormat } from "@/utils";
+import { timeFormat } from "@/shared/utils";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faClock,
@@ -14,13 +14,13 @@ import Image from "next/image";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
+import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import Link from "next/link";
 
 export default function Home({
   categories,
@@ -73,7 +73,7 @@ export default function Home({
                 <Image
                   className="p-3 shadow object-cover"
                   src="/images/banner.png"
-                  layout="fill"
+                  fill={true}
                   alt="Banner"
                   loading="lazy"
                 />
@@ -84,7 +84,7 @@ export default function Home({
                 <Image
                   className="p-3 shadow object-cover"
                   src="/images/banner.png"
-                  layout="fill"
+                  fill={true}
                   alt="Banner"
                   loading="lazy"
                 />
@@ -95,7 +95,7 @@ export default function Home({
                 <Image
                   className="p-3 shadow object-cover"
                   src="/images/banner.png"
-                  layout="fill"
+                  fill={true}
                   alt="Banner"
                   loading="lazy"
                 />
@@ -136,7 +136,7 @@ export default function Home({
                             className="object-cover rounded-3xl"
                             alt={category.name}
                             loading="lazy"
-                            layout="fill"
+                            fill={true}
                           />
                         </div>
                         <p className="text-sm line-clamp-2 text-gray-600 mt-2">
@@ -182,7 +182,7 @@ export default function Home({
                           className="object-cover"
                           alt={product.name}
                           loading="lazy"
-                          layout="fill"
+                          fill={true}
                         />
                       </div>
                       <div className="px-4 py-4 flex flex-col gap-2">

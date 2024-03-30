@@ -14,15 +14,16 @@ import { LoginSchema } from "@/schema/schema";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@tanstack/react-query";
 
+import { setToken, setUser } from "@/features/user.reducer";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useRouter } from "next/navigation";
-import useLocalStorage from "../../hooks/useLocalStorage";
 
 export default function Login() {
   const router = useRouter();
-  const [token, setToken] = useLocalStorage("token", null);
-  const [name, setName] = useLocalStorage("user", null);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state);
 
-  if (token) {
+  if (user.token) {
     router.back();
   }
 
@@ -33,16 +34,16 @@ export default function Login() {
       return login(user);
     },
     onSuccess(data) {
-      // Set token to localstorage
-      setToken(data.token);
+      dispatch(setToken(data.token));
+      dispatch(setUser(data.user));
 
-      setName(data.user);
-
-      router.push("/");
       // Notify user for when successfully logged in
       setTimeout(() => {
-        toast.success("You logged in successfully");
-      }, 3 * 1000);
+        router.push("/");
+        setTimeout(() => {
+          toast.success("You logged in successfully");
+        }, 1000);
+      }, 1000);
     },
     onError(error: { message: string }) {
       toast.error(error?.message);

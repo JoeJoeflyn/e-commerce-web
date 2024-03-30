@@ -1,5 +1,5 @@
 "use client";
-import { avatarGenerateSplit, generateRandomColor } from "@/utils";
+import { avatarGenerateSplit, generateRandomColor } from "@/shared/utils";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import {
   faCircleInfo,
@@ -12,15 +12,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import useLocalStorage from "../../hooks/useLocalStorage";
 
 export default function Management() {
   const router = useRouter();
-  const [token] = useLocalStorage("token", null);
-
-  if (!token) {
-    router.push("/login");
-  }
 
   return (
     <div className="max-w-5xl mx-auto mb-5">
@@ -59,7 +53,7 @@ export default function Management() {
             <Image
               className="object-cover rounded-lg"
               src="/images/empty-product.jpeg"
-              layout="fill"
+              fill={true}
               alt="Logo"
               loading="lazy"
             />
