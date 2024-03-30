@@ -36,9 +36,11 @@ export default function Signup() {
       return createAccount(newAccount);
     },
     onSuccess() {
-      toast.success("You signed up successfully");
-
       router.push("/login");
+
+      setTimeout(() => {
+        toast.success("You signed up successfully");
+      }, 3 * 1000);
     },
     onError(error: { message: string }) {
       toast.error(error?.message);
@@ -60,13 +62,15 @@ export default function Signup() {
 
             setSubmitting(false);
 
-            resetForm({
-              values: {
-                name: "",
-                email: "",
-                password: "",
-              },
-            });
+            setTimeout(() => {
+              resetForm({
+                values: {
+                  name: "",
+                  email: "",
+                  password: "",
+                },
+              });
+            }, 3 * 1000);
           }}
         >
           {({

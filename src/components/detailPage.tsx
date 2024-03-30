@@ -51,7 +51,7 @@ export default function DetailPage({ product }: { product: Product }) {
                   <PhotoProvider>
                     <PhotoView src={image.name}>
                       <Image
-                        className="p-3 shadow object-fill"
+                        className="p-3 shadow object-contain"
                         src={image.name}
                         layout="fill"
                         alt={image.name}

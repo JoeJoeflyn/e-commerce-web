@@ -35,7 +35,7 @@ export default function Home({
   const [category, setCategory] = React.useState([]);
 
   const { data: getCategories, isFetching: isFetchingCategories } = useQuery({
-    queryKey: ["categories", page, search, category],
+    queryKey: ["categories"],
     queryFn: () => getAllCategories(),
     initialData: {
       categories,

@@ -48,7 +48,5 @@ export const generateRandomColor = (name: string) => {
     return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
   };
 
-  console.log(HSLtoString(generateHSL(name)));
-
   return HSLtoString(generateHSL(name));
 };

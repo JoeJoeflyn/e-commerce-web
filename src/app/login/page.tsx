@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { SyncLoader } from "react-spinners";
 import { toast } from "react-toastify";
@@ -15,18 +15,16 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@tanstack/react-query";
 
 import { useRouter } from "next/navigation";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 export default function Login() {
   const router = useRouter();
+  const [token, setToken] = useLocalStorage("token", null);
+  const [name, setName] = useLocalStorage("user", null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      router.back();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (token) {
+    router.back();
+  }
 
   const [togglePassword, setTogglePassword] = React.useState(true);
 
@@ -36,12 +34,15 @@ export default function Login() {
     },
     onSuccess(data) {
       // Set token to localstorage
-      localStorage.setItem("token", data.token);
-      // Notify user for when successfully logged in
+      setToken(data.token);
+
+      setName(data.user);
+
       router.push("/");
+      // Notify user for when successfully logged in
       setTimeout(() => {
         toast.success("You logged in successfully");
-      }, 5 * 1000);
+      }, 3 * 1000);
     },
     onError(error: { message: string }) {
       toast.error(error?.message);
@@ -65,7 +66,7 @@ export default function Login() {
                   setSubmitting(false);
                   setTimeout(() => {
                     resetForm();
-                  }, 5 * 1000);
+                  }, 3 * 1000);
                 },
                 onError: () => {
                   setSubmitting(false);

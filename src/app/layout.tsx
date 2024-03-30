@@ -7,7 +7,7 @@ import { Inter } from "next/font/google";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin-ext"] });
 
 export const metadata: Metadata = {
   title: {
@@ -25,10 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-[#f4f4f4]`}>
-        <Navbar />
         <ToastContainer />
-        <Providers>{children}</Providers>
-        <Footer />
+        <Providers>
+          <Navbar />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
