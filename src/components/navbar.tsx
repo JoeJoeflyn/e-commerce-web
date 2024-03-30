@@ -1,7 +1,8 @@
 "use client";
 import { removeToken } from "@/api";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { avatarGenerateSplit, generateRandomColor } from "@/utils";
+import { setToken, setUser } from "@/features/user.reducer";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { avatarGenerateSplit, generateRandomColor } from "@/shared/utils";
 import {
   faBell,
   faCircleUser,
@@ -30,18 +31,13 @@ export default function Navbar() {
   const pathname = usePathname();
   const noNav = ["/login", "/signup"];
   const [isOpen, setIsOpen] = React.useState(false);
-  const [name, setName] = useLocalStorage("user", null);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const router = useRouter();
-
-  console.log("name", name?.name);
+  const { user } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // const userInfo = getUserInformation();
-
-    // if (userInfo?.name) {
-    //   setName(userInfo?.name);
-    // }
+    if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,11 +52,12 @@ export default function Navbar() {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  });
+  }, [isOpen]);
 
   const hanldeSignOut = () => {
     removeToken();
-    setName("");
+    dispatch(setUser(""));
+    dispatch(setToken(""));
     router.push("/");
     window.location.reload();
   };
@@ -77,7 +74,7 @@ export default function Navbar() {
             <Image
               className="object-cover"
               src="/images/logo.png"
-              layout="fill"
+              fill={true}
               alt="Logo"
               loading="lazy"
             />
@@ -114,19 +111,19 @@ export default function Navbar() {
             onClick={hanldeDropdown}
             className="flex items-center gap-2 cursor-pointer hover:text-gray-700"
           >
-            {name?.name ? (
+            {user?.data?.name ? (
               <div
                 className="w-3 h-3 relative flex justify-center items-center rounded-full p-4 text-xl text-white uppercase"
                 style={{
-                  backgroundColor: `${generateRandomColor(name?.name)}`,
+                  backgroundColor: `${generateRandomColor(user?.data?.name)}`,
                 }}
               >
-                {avatarGenerateSplit(name?.name)}
+                {avatarGenerateSplit(user?.data?.name)}
               </div>
             ) : (
               <FontAwesomeIcon width={16} icon={faCircleUser} />
             )}
-            {name?.name ? name?.name : "Account"}
+            {user?.data?.name ? user?.data?.name : "Account"}
             {isOpen ? (
               <FontAwesomeIcon width={16} icon={faChevronUp} />
             ) : (
@@ -136,14 +133,16 @@ export default function Navbar() {
           {isOpen ? (
             <div className="flex flex-col absolute right-0 top-14 w-64 bg-white text-sm border shadow">
               <div className="flex items-start gap-3 px-3 py-5">
-                {name?.name ? (
+                {user?.data?.name ? (
                   <div
                     className="w-12 h-12 relative flex justify-center items-center rounded-full text-xl text-white uppercase"
                     style={{
-                      backgroundColor: `${generateRandomColor(name?.name)}`,
+                      backgroundColor: `${generateRandomColor(
+                        user?.data?.name
+                      )}`,
                     }}
                   >
-                    {avatarGenerateSplit(name?.name)}
+                    {avatarGenerateSplit(user?.data?.name)}
                   </div>
                 ) : (
                   <Image
@@ -156,8 +155,10 @@ export default function Navbar() {
                   />
                 )}
                 <div className="flex flex-col gap-2">
-                  {name?.name ? (
-                    <p className="font-bold text-base mb-1">{name?.name}</p>
+                  {user?.data?.name ? (
+                    <p className="font-bold text-base mb-1">
+                      {user?.data?.name}
+                    </p>
                   ) : (
                     <Link className="font-bold text-base mb-1" href="/login">
                       Sign in / Sign up
@@ -250,7 +251,7 @@ export default function Navbar() {
                   />
                   Help
                 </div>
-                {name?.name ? (
+                {user?.data?.name ? (
                   <div
                     onClick={hanldeSignOut}
                     className="hover:bg-[#E8E8E8] p-3 flex items-center gap-2 cursor-pointer"

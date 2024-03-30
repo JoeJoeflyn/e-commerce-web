@@ -1,6 +1,5 @@
 "use client";
 import { createProduct, getAllCategories } from "@/api/";
-import useLocalStorage from "@/hooks/useLocalStorage";
 import { ProductSchema } from "@/schema/schema";
 import { faClose, faImage, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,11 +13,6 @@ import { toast } from "react-toastify";
 
 export default function Sell() {
   const router = useRouter();
-  const [token] = useLocalStorage("token", null);
-
-  if (!token) {
-    router.push("/login");
-  }
 
   const [previewImages, setPreviewImages] = React.useState<string[]>([]);
 
@@ -160,7 +154,7 @@ export default function Sell() {
                         <Image
                           src={imageUrl}
                           alt={`Preview ${index}`}
-                          layout="fill"
+                          fill={true}
                           objectFit="contain"
                           className="border border-gray-300 border-solid w-full h-auto"
                         />
