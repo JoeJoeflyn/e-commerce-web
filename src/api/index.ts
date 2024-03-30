@@ -1,3 +1,4 @@
-export * from "./categoryAPI";
-export * from "./productAPI";
+export * from "./category";
+export * from "./product";
 export * from "./authentication";
+export * from "./config";
