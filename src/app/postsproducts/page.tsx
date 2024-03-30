@@ -164,7 +164,7 @@ export default function PostsProduct() {
                         <Image
                           src={imageUrl}
                           alt={`Preview ${index}`}
-                          layout="fill"
+                          fill={true}
                           objectFit="contain"
                           className="border border-gray-300 border-solid w-full h-auto"
                         />
