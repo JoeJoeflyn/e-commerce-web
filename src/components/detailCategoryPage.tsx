@@ -54,15 +54,15 @@ export default function DetailCategoryPage({
   } = useQuery({
     queryKey: ["productsBycategory", page, search, categoryId],
     queryFn: () => getProducts({ page, search, categoryId }),
-    initialData: {
+    placeholderData: {
       products,
     },
   });
 
-  React.useEffect(() => {
-    if (page) refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  // React.useEffect(() => {
+  //   if (page) refetch();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [page]);
 
   return (
     <div className="max-w-5xl mx-auto my-5">
