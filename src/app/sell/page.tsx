@@ -1,6 +1,9 @@
 "use client";
 import { createProduct, getAllCategories } from "@/api/";
+import { useAppSelector } from "@/hooks/redux";
+import useNavigate from "@/hooks/useNavigate";
 import { ProductSchema } from "@/schema/schema";
+import { NAVIGATE_KEYS } from "@/shared/constants";
 import { faClose, faImage, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -13,6 +16,8 @@ import { toast } from "react-toastify";
 
 export default function Sell() {
   const router = useRouter();
+  const { user } = useAppSelector((state) => state);
+  useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
 
   const [previewImages, setPreviewImages] = React.useState<string[]>([]);
 
@@ -70,7 +75,7 @@ export default function Sell() {
 
   return (
     <>
-      <div className="grid place-items-center my-10">
+      <div className="grid max-w-5xl mx-auto my-10">
         <Formik
           initialValues={{
             category: "",
@@ -87,6 +92,7 @@ export default function Sell() {
           onSubmit={(values, { setSubmitting, resetForm }) => {
             mutate({
               ...values,
+              userId: user?.data?.id,
               price: +values.price.replace(/,/g, ""),
               discount: +values.discount.replace(/,/g, ""),
               quantity: +values.quantity.replace(/,/g, ""),

@@ -15,17 +15,15 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@tanstack/react-query";
 
 import { setToken, setUser } from "@/features/user.reducer";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppDispatch } from "@/hooks/redux";
+import useNavigate from "@/hooks/useNavigate";
 import { useRouter } from "next/navigation";
+import { NAVIGATE_KEYS } from "@/shared/constants";
 
 export default function Login() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state);
-
-  if (user.token) {
-    router.back();
-  }
+  useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
 
   const [togglePassword, setTogglePassword] = React.useState(true);
 

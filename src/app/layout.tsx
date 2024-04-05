@@ -1,13 +1,13 @@
-import "./globals.css";
-import Providers from "./provider";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import ScrollToTop from "@/components/scrollToTop";
+import StoreProvider from "@/providers/store.provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "../components/navbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Footer from "../components/footer";
-import StoreProvider from "@/providers/store.provider";
-import { PersistGate } from "redux-persist/integration/react";
+import Navbar from "../components/navbar";
+import "./globals.css";
+import Providers from "./provider";
 
 const inter = Inter({ subsets: ["latin-ext"] });
 
@@ -28,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-[#f4f4f4]`}>
         <ToastContainer />
+        <ScrollToTop />
         <Providers>
           <StoreProvider>
             <Navbar />

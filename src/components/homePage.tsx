@@ -1,5 +1,5 @@
 "use client";
-import { getAllCategories, getAllProducts } from "@/api";
+import { getAllCategories, getProducts } from "@/api";
 import { Category, Product } from "@/shared/interfaces";
 import { timeFormat } from "@/shared/utils";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
@@ -32,7 +32,7 @@ export default function Home({
   const [heartStatus, setHeartStatus] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
-  const [category, setCategory] = React.useState([]);
+  const [categoryId, setCategoryId] = React.useState([]);
 
   const { data: getCategories, isFetching: isFetchingCategories } = useQuery({
     queryKey: ["categories"],
@@ -42,9 +42,9 @@ export default function Home({
     },
   });
 
-  const { data: getProducts, isFetching: isFetchingProducts } = useQuery({
-    queryKey: ["products", page, search, category],
-    queryFn: () => getAllProducts({ page, search, category }),
+  const { data: _products, isFetching: isFetchingProducts } = useQuery({
+    queryKey: ["products", page, search, categoryId],
+    queryFn: () => getProducts({ page, search, categoryId }),
     initialData: {
       products,
     },
@@ -107,7 +107,7 @@ export default function Home({
           <p className="font-bold text-lg">Categories</p>
           <div className="grid grid-cols-3 lg:grid-cols-7 items-start mt-5 text-center">
             {isFetchingCategories
-              ? Array(7)
+              ? Array(8)
                   .fill(null)
                   .map((_, index) => (
                     <div key={index} className={`rounded-b-lg`}>
@@ -123,27 +123,26 @@ export default function Home({
                   ))
               : getCategories?.categories?.map((category: Category) => {
                   return (
-                    <div
+                    <Link
+                      href={`/category/${category.id}`}
                       key={category.id}
-                      className={`rounded-b-lg ${
+                      className={`flex flex-col items-center rounded-b-lg ${
                         category.status.trim() === "Published" ? "" : "hidden"
                       }`}
                     >
-                      <a href="#" className="flex flex-col items-center">
-                        <div className="relative h-20 w-20">
-                          <Image
-                            src={category?.image ?? "/images/category.jpeg"}
-                            className="object-cover rounded-3xl"
-                            alt={category.name}
-                            loading="lazy"
-                            fill={true}
-                          />
-                        </div>
-                        <p className="text-sm line-clamp-2 text-gray-600 mt-2">
-                          {category.name}
-                        </p>
-                      </a>
-                    </div>
+                      <div className="relative h-20 w-20">
+                        <Image
+                          src={category?.image ?? "/images/category.jpeg"}
+                          className="object-cover rounded-3xl"
+                          alt={category.name}
+                          loading="lazy"
+                          fill={true}
+                        />
+                      </div>
+                      <p className="text-sm line-clamp-2 text-gray-600 mt-2">
+                        {category.name}
+                      </p>
+                    </Link>
                   );
                 })}
           </div>
@@ -152,89 +151,79 @@ export default function Home({
           <p className="font-bold text-lg">Products</p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
             {isFetchingProducts
-              ? Array(7)
+              ? Array(8)
                   .fill(null)
                   .map((_, index) => (
-                    <div className={`rounded-b-lg border`} key={index}>
+                    <div className={`rounded-b-lg p-2`} key={index}>
                       <div className="relative w-full h-64">
                         <Skeleton className="h-full rounded-b-lg" />
                       </div>
-                      <div className="px-4 py-4">
+                      <div className="py-2">
                         <Skeleton count={3} />
                       </div>
                     </div>
                   ))
-              : getProducts?.products?.map((product: Product) => {
+              : _products?.products?.map((product: Product) => {
                   return (
                     <Link
-                      href={`/products/${product.id}`}
-                      className={`rounded-b-lg border hover:shadow-lg cursor-pointer ${
+                      href={`/product/${product.id}`}
+                      key={product.id}
+                      className={`rounded-b-lg cursor-pointer ${
                         product.status.trim() === "Published" ? "" : "hidden"
                       }`}
-                      key={product.id}
                     >
-                      <div className="relative w-full h-64">
+                      <div className="relative w-full h-64 bg-[#0000000D] rounded-2xl">
                         <Image
                           src={
                             product?.productImages?.[0]?.name ??
                             "/images/empty-product.jpeg"
                           }
-                          className="object-cover"
+                          className="object-contain"
                           alt={product.name}
                           loading="lazy"
                           fill={true}
                         />
+                        <div
+                          className="cursor-pointer absolute top-2 right-2 text-sm font-light bg-white px-2 py-1 rounded-full"
+                          onClick={() => setHeartStatus(!heartStatus)}
+                        >
+                          {heartStatus ? (
+                            <FontAwesomeIcon
+                              width={16}
+                              size="xl"
+                              icon={fasHeart}
+                            />
+                          ) : (
+                            <FontAwesomeIcon
+                              width={16}
+                              size="xl"
+                              icon={farHeart}
+                            />
+                          )}
+                        </div>
                       </div>
-                      <div className="px-4 py-4 flex flex-col gap-2">
-                        <>
-                          <div className="text-sm text-gray-600">
-                            {product.name}
-                          </div>
-                          <div className="font-bold flex items-baseline gap-2">
-                            <p className="text-[#d70018] font-bold">
-                              {new Intl.NumberFormat("en-US", {
-                                style: "currency",
-                                currency: "USD",
-                              }).format(
-                                product?.price - product?.discountPrice
-                              )}
-                            </p>
-                            <p className="text-[#707070] font-semibold text-sm line-through">
-                              {new Intl.NumberFormat("en-US", {
-                                style: "currency",
-                                currency: "USD",
-                              }).format(product?.price)}
-                            </p>
-                          </div>
-                        </>
-                        <div className="flex justify-between gap-1 text-sm text-gray-500">
-                          <div className="flex justify-between items-center gap-1">
+                      <div className="flex flex-col gap-2 text-[#191919] m-2">
+                        <div className="text-sm hover:underline font-normal">
+                          {product.name}
+                        </div>
+                        <div className="font-bold flex justify-between items-baseline gap-2">
+                          <p className="text-lg font-bold">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(product?.price - product?.discountPrice)}
+                          </p>
+                          <p className="text-[#707070] font-semibold text-sm line-through">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(product?.price)}
+                          </p>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
                             <FontAwesomeIcon width={15} icon={faClock} />
                             {timeFormat(product.createdAt)}
-                          </div>
-                          <div className="flex justify-between items-center gap-1">
-                            <FontAwesomeIcon width={15} icon={faLocationDot} />
-                            {product.location}
-                          </div>
-                          <div
-                            className="cursor-pointer text-sm font-light"
-                            onClick={() => setHeartStatus(!heartStatus)}
-                          >
-                            {heartStatus ? (
-                              <FontAwesomeIcon
-                                className="text-red-600"
-                                width={30}
-                                size="xl"
-                                icon={fasHeart}
-                              />
-                            ) : (
-                              <FontAwesomeIcon
-                                className="text-red-600"
-                                width={30}
-                                size="xl"
-                                icon={farHeart}
-                              />
-                            )}
                           </div>
                         </div>
                       </div>

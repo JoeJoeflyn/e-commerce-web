@@ -1,4 +1,6 @@
 "use client";
+import useNavigate from "@/hooks/useNavigate";
+import { NAVIGATE_KEYS } from "@/shared/constants";
 import { avatarGenerateSplit, generateRandomColor } from "@/shared/utils";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -11,13 +13,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 export default function Management() {
-  const router = useRouter();
+  useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
 
   return (
-    <div className="max-w-5xl mx-auto mb-5">
+    <div className="max-w-5xl mx-auto h-screen">
       <div className="flex flex-col p-3 gap-3 border border-[#e8e8e8] bg-white ">
         <div className="flex items-center gap-2 text-sm">
           <p className="font-bold">Shortcut</p>

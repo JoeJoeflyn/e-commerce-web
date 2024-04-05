@@ -3,6 +3,7 @@ import axios from "axios";
 export const createProduct = async (newProduct: {
   files: File[];
   category: string;
+  userId: string;
   name: string;
   description: string;
   price: number;
@@ -20,6 +21,7 @@ export const createProduct = async (newProduct: {
   });
 
   formData.append("categoryId", product.category);
+  formData.append("userId", product.userId);
   formData.append("name", product.name);
   formData.append("description", product.description);
   formData.append("price", product.price.toString());
@@ -43,30 +45,31 @@ export const createProduct = async (newProduct: {
   return parseResponse;
 };
 
-export const getAllProducts = async (queryParams: {
+export const getProducts = async (queryParams: {
   page?: number;
   search?: string;
-  category?: string[];
+  categoryId?: number[];
 }) => {
-  const { page, search, category } = queryParams;
+  const { page, search, categoryId } = queryParams;
 
   const searchParams = new URLSearchParams();
 
   if (page !== undefined) {
     searchParams.set("page", page.toString());
-    searchParams.set("limit", "10");
+    searchParams.set("limit", "5");
   }
   if (search) {
     searchParams.set("search", search);
   }
 
-  if (category?.length !== 0) {
-    category?.forEach((category) => {
-      searchParams.append("category[]", category.toString());
+  if (categoryId?.length !== 0) {
+    categoryId?.forEach((item) => {
+      searchParams.append("category[]", item.toString());
     });
   }
 
   const decodedQuerystring = decodeURIComponent(searchParams.toString());
+
   try {
     const { data } = await axios(
       `${process.env.NEXT_PUBLIC_API_URL}/products?${decodedQuerystring}`
@@ -74,9 +77,7 @@ export const getAllProducts = async (queryParams: {
 
     return data;
   } catch (error) {
-    if (error) {
-      throw new Error("Server Error, Please try again later!");
-    }
+    return [];
   }
 };
 
@@ -88,8 +89,6 @@ export const getProduct = async (id: number) => {
 
     return data;
   } catch (error) {
-    if (error) {
-      throw new Error("Server Error, Please try again later!");
-    }
+    return [];
   }
 };

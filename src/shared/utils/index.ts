@@ -1,10 +1,10 @@
 import moment from "moment";
 
 export const timeFormat = (time: string) => {
-  const currentTime = moment();
-  const targetTime = moment(time);
+  // const currentTime = moment();
+  const targetTime = moment(time, "YYYY-MM-DD HH:mm:ss");
 
-  return targetTime.from(currentTime);
+  return targetTime.fromNow();
 };
 
 export const avatarGenerateSplit = (name: string) => {

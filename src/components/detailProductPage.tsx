@@ -11,30 +11,31 @@ import {
   faFacebookMessenger,
 } from "@fortawesome/free-brands-svg-icons";
 import {
+  faHeart,
   faLink,
-  faLocationDot,
   faPhone,
   faShield,
-  faSquareCheck,
-  faTag,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "../app/globals.css";
-import { PhotoProvider, PhotoView } from "react-photo-view";
-import "react-photo-view/dist/react-photo-view.css";
+import RelatedProducts from "./relatedProducts";
 
 export default function DetailPage({ product }: { product: Product }) {
   return (
     <div className="bg-white max-w-5xl mx-auto my-5">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-5 border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-5">
         <div className="col-span-2">
           <Swiper
+            key={"product"}
             spaceBetween={30}
             centeredSlides={true}
             autoplay={{
@@ -47,7 +48,7 @@ export default function DetailPage({ product }: { product: Product }) {
             navigation={true}
             loop={true}
             modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper relative"
+            className="customSwiper mySwiper relative"
           >
             {product?.productImages.map((image) => (
               <SwiperSlide key={image.id}>
@@ -72,9 +73,9 @@ export default function DetailPage({ product }: { product: Product }) {
           </Swiper>
           <div>
             <div className="flex flex-col gap-3 mt-2">
-              <p className="font-medium">{product?.name}</p>
+              <p className="font-bold text-xl">{product?.name}</p>
               <div className="font-bold flex items-baseline gap-2">
-                <p className="text-[#d70018] font-bold">
+                <p className="text-lg font-bold">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
@@ -87,30 +88,41 @@ export default function DetailPage({ product }: { product: Product }) {
                   }).format(product?.price)}
                 </p>
               </div>
-              <p className="text-sm">{product?.description}</p>
-              <div className="grid grid-cols-2 gap-2 text-sm font-light">
-                <p className="flex items-center gap-2">
-                  <FontAwesomeIcon width={16} icon={faPhone} />
-                  Phone: {product?.contact}
+              <div className="flex flex-col gap-2">
+                <p className="text-2xl font-bold">
+                  Description from the seller
                 </p>
-                <p className="flex items-center gap-2">
-                  <FontAwesomeIcon width={16} icon={faTag} />
-                  Type: {product?.category.name}
-                </p>
-                <p className="flex items-center gap-2">
-                  <FontAwesomeIcon width={16} icon={faLocationDot} />
-                  Location: {product?.location}
-                </p>
-                <p className="flex items-center gap-2">
-                  <FontAwesomeIcon width={16} icon={faSquareCheck} />
-                  {product?.status.trim().toLowerCase() === "published" &&
-                    "verified"}
-                </p>
+                <p className="text-base leading-5">{product?.description}</p>
               </div>
-              <p className="font-medium text-gray-500 border-b pb-3">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
+                  <p className="text-2xl font-bold">Item specifics</p>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-1 items-start text-sm font-light">
+                    <p className="flex items-center gap-1 text-base">
+                      <span className="text-[#707070]">Phone:</span>
+                      {product?.contact}
+                    </p>
+                    <p className="flex items-center gap-1 text-base">
+                      <span className="text-[#707070]">Type:</span>
+                      {product?.category.name}
+                    </p>
+                    <p className="flex items-center gap-1 text-base">
+                      <span className="text-[#707070]">Quantity:</span>
+                      {product?.quantity}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <p className="text-2xl font-bold">Seller address</p>
+                  <p className="flex items-start gap-1 text-base">
+                    {product?.location}
+                  </p>
+                </div>
+              </div>
+              <p className="font-medium text-gray-500">
                 Share with your friends
               </p>
-              <div className="flex items-center gap-5 pb-3 border-b">
+              <div className="flex items-center gap-5 py-4 border-y">
                 <FontAwesomeIcon
                   className="text-[#285fbd] cursor-pointer"
                   icon={faFacebook}
@@ -129,7 +141,7 @@ export default function DetailPage({ product }: { product: Product }) {
                   icon={faLink}
                 />
               </div>
-              <div className="flex items-center gap-2 text-xs italic">
+              <div className="flex items-center gap-2 text-sm italic">
                 <FontAwesomeIcon width={30} size="2x" icon={faShield} />
                 <p>
                   This post was verified by admin. If you have any problem,
@@ -151,7 +163,32 @@ export default function DetailPage({ product }: { product: Product }) {
               >
                 {avatarGenerateSplit("Stacey Fleming")}
               </div>
-              <p>Username Here</p>
+              <div className="flex-grow">
+                <p>Username Here</p>
+                <div className="flex items-baseline gap-2 pb-2">
+                  <div className="text-yellow-500">
+                    <FontAwesomeIcon width={14} icon={faStar} />
+                    <FontAwesomeIcon width={14} icon={faStar} />
+                    <FontAwesomeIcon width={14} icon={faStar} />
+                    <FontAwesomeIcon width={14} icon={faStar} />
+                    <FontAwesomeIcon width={14} icon={faStar} />
+                  </div>
+                  <span className="text-sm font-bold">5.0</span>
+                  <span className="hover:text-[#707070] text-sm cursor-pointer underline">
+                    56 Reviews
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-full flex justify-center items-center gap-2 text-sm text-[#222] font-semibold px-3 py-1 border border-slate-300 rounded-md">
+                    <FontAwesomeIcon width={14} icon={faHeart} />
+                    Save seller
+                  </div>
+                  <div className="w-full flex justify-center items-center gap-2 text-sm text-[#222] font-semibold px-3 py-1 border border-slate-300 rounded-md">
+                    <FontAwesomeIcon width={14} icon={faPhone} />
+                    Contact
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="flex items-center gap-2 bg-[#61a937] hover:bg-[#3c763d] text-white py-2 px-3 rounded cursor-pointer">
               <FontAwesomeIcon width={16} icon={faPhone} />
@@ -160,6 +197,7 @@ export default function DetailPage({ product }: { product: Product }) {
           </div>
         </div>
       </div>
+      <RelatedProducts />
     </div>
   );
 }
