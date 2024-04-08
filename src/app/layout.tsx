@@ -1,11 +1,11 @@
-import ScrollToTop from "@/components/scrollToTop";
+import ScrollToTop from "@/components/scroll/ScrollToTop";
 import StoreProvider from "@/providers/store.provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
+import Footer from "../components/footer/Footer";
+import Navbar from "../components/navbar/Navbar";
 import "./globals.css";
 import Providers from "./provider";
 

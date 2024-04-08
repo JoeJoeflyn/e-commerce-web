@@ -20,4 +20,8 @@ export type Product = {
     status: string;
     createdAt: string;
   }[];
+  user: {
+    name: string;
+    email: string;
+  };
 };

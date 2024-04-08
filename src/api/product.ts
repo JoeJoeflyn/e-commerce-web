@@ -49,8 +49,9 @@ export const getProducts = async (queryParams: {
   page?: number;
   search?: string;
   categoryId?: number[];
+  sort?: string;
 }) => {
-  const { page, search, categoryId } = queryParams;
+  const { page, search, categoryId, sort } = queryParams;
 
   const searchParams = new URLSearchParams();
 
@@ -58,8 +59,13 @@ export const getProducts = async (queryParams: {
     searchParams.set("page", page.toString());
     searchParams.set("limit", "5");
   }
+
   if (search) {
     searchParams.set("search", search);
+  }
+
+  if (sort) {
+    searchParams.set("sort", sort);
   }
 
   if (categoryId?.length !== 0) {
@@ -71,9 +77,14 @@ export const getProducts = async (queryParams: {
   const decodedQuerystring = decodeURIComponent(searchParams.toString());
 
   try {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_API_URL}/products?${decodedQuerystring}`
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products?${decodedQuerystring}`,
+      {
+        method: "GET",
+        next: { tags: ["list-products"] },
+      }
     );
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -83,9 +94,15 @@ export const getProducts = async (queryParams: {
 
 export const getProduct = async (id: number) => {
   try {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+      {
+        method: "GET",
+        next: { tags: ["product"] },
+      }
     );
+
+    const data = await res.json();
 
     return data;
   } catch (error) {

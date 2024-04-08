@@ -1,12 +1,11 @@
 import { getAllCategories, getProducts } from "@/api";
-import Home from "@/components/homePage";
+import Home from "@/components/home/HomePage";
 
 export default async function Page() {
   const results = await Promise.allSettled([
     getAllCategories(),
     getProducts({
       page: 1,
-      search: "",
       categoryId: [],
     }),
   ]);

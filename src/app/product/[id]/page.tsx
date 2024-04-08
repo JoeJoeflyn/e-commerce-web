@@ -1,8 +1,19 @@
-import { getProduct } from "@/api";
-import DetailProductPage from "@/components/detailProductPage";
+import { getProduct, getProducts } from "@/api";
+import DetailProductPage from "@/components/detail/DetailProductPage";
 
 export default async function Page({ params }: { params: { id: number } }) {
-  const { product } = await getProduct(params.id);
+  const results = await Promise.allSettled([
+    getProduct(params.id),
+    getProducts({
+      page: 1,
+      categoryId: [],
+    }),
+  ]);
 
-  return <DetailProductPage product={product} />;
+  const product =
+    results[0].status === "fulfilled" ? results[0].value.product : [];
+  const products =
+    results[1].status === "fulfilled" ? results[1].value.products : [];
+
+  return <DetailProductPage product={product} products={products} />;
 }

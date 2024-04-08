@@ -1,5 +1,6 @@
 "use client";
 import userReducer from "@/features/user.reducer";
+import searchReducer from "@/features/search.reducer";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 import storage from "redux-persist/lib/storage";
@@ -8,10 +9,12 @@ import { persistStore, persistReducer } from "redux-persist";
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["user"],
 };
 
 const rootReducer = combineReducers({
   user: userReducer,
+  search: searchReducer,
 });
 
 const makeStore = () => {

@@ -19,7 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { PhotoProvider, PhotoView } from "react-photo-view";
+import { PhotoProvider, PhotoSlider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -27,9 +27,35 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import RelatedProducts from "./relatedProducts";
+import RelatedProducts from "../relatedProduct/RelatedProducts";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "@/api";
+import React from "react";
 
-export default function DetailPage({ product }: { product: Product }) {
+export default function DetailPage({
+  product,
+  products,
+}: {
+  product: Product;
+  products: Product[];
+}) {
+  const { productImages, user } = product;
+  const [visible, setVisible] = React.useState(false);
+  const [index, setIndex] = React.useState(0);
+  // const {
+  //   data: _products,
+  //   isFetching: isFetchingProducts,
+  //   refetch,
+  // } = useQuery({
+  //   queryKey: ["relatedProducts", product.category.id],
+  //   queryFn: () =>
+  //     getProducts({
+  //       page: 1,
+  //       categoryId: [product.category.id],
+  //     }),
+  //   enabled: !!product.category.id,
+  // });
+
   return (
     <div className="bg-white max-w-5xl mx-auto my-5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-5">
@@ -50,23 +76,36 @@ export default function DetailPage({ product }: { product: Product }) {
             modules={[Autoplay, Pagination, Navigation]}
             className="customSwiper mySwiper relative"
           >
-            {product?.productImages.map((image) => (
+            {productImages?.map((image, index) => (
               <SwiperSlide key={image.id}>
-                <div className="relative h-80">
-                  <PhotoProvider>
-                    <PhotoView src={image.name}>
-                      <Image
-                        className="p-3 shadow object-contain"
-                        src={image.name}
-                        layout="fill"
-                        alt={image.name}
-                        loading="lazy"
-                      />
-                    </PhotoView>
-                  </PhotoProvider>
+                <div
+                  className="relative h-80"
+                  onClick={() => {
+                    setIndex(index);
+                    setVisible(true);
+                  }}
+                >
+                  <Image
+                    key={image.id}
+                    className="p-3 shadow object-contain"
+                    src={image.name}
+                    layout="fill"
+                    alt={image.name}
+                    loading="lazy"
+                  />
                 </div>
               </SwiperSlide>
             ))}
+            <PhotoSlider
+              images={productImages.map((item) => ({
+                src: item.name,
+                key: item.id,
+              }))}
+              visible={visible}
+              onClose={() => setVisible(false)}
+              index={index}
+              onIndexChange={setIndex}
+            />
             <div className="bg-black opacity-70 w-full text-white text-right p-0.5">
               <p className="mr-2">Posted at {timeFormat(product?.createdAt)}</p>
             </div>
@@ -158,20 +197,20 @@ export default function DetailPage({ product }: { product: Product }) {
               <div
                 className="w-12 h-12 relative flex justify-center items-center rounded-full text-xl text-white uppercase"
                 style={{
-                  backgroundColor: `${generateRandomColor("Stacey Fleming")}`,
+                  backgroundColor: `${generateRandomColor(user.name)}`,
                 }}
               >
-                {avatarGenerateSplit("Stacey Fleming")}
+                {avatarGenerateSplit(user.name)}
               </div>
               <div className="flex-grow">
-                <p>Username Here</p>
+                <p>{user.name}</p>
                 <div className="flex items-baseline gap-2 pb-2">
                   <div className="text-yellow-500">
-                    <FontAwesomeIcon width={14} icon={faStar} />
-                    <FontAwesomeIcon width={14} icon={faStar} />
-                    <FontAwesomeIcon width={14} icon={faStar} />
-                    <FontAwesomeIcon width={14} icon={faStar} />
-                    <FontAwesomeIcon width={14} icon={faStar} />
+                    {Array(5)
+                      .fill(null)
+                      .map((_, index) => (
+                        <FontAwesomeIcon key={index} width={14} icon={faStar} />
+                      ))}
                   </div>
                   <span className="text-sm font-bold">5.0</span>
                   <span className="hover:text-[#707070] text-sm cursor-pointer underline">
@@ -179,11 +218,11 @@ export default function DetailPage({ product }: { product: Product }) {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-full flex justify-center items-center gap-2 text-sm text-[#222] font-semibold px-3 py-1 border border-slate-300 rounded-md">
+                  <div className="w-full flex justify-center items-center gap-2 text-sm text-[#222] font-semibold px-3 py-1 border hover:opacity-80 cursor-pointer border-slate-300 rounded-md">
                     <FontAwesomeIcon width={14} icon={faHeart} />
                     Save seller
                   </div>
-                  <div className="w-full flex justify-center items-center gap-2 text-sm text-[#222] font-semibold px-3 py-1 border border-slate-300 rounded-md">
+                  <div className="w-full flex justify-center items-center gap-2 text-sm text-[#222] font-semibold px-3 py-1 border hover:opacity-80 cursor-pointer border-slate-300 rounded-md">
                     <FontAwesomeIcon width={14} icon={faPhone} />
                     Contact
                   </div>
@@ -197,7 +236,7 @@ export default function DetailPage({ product }: { product: Product }) {
           </div>
         </div>
       </div>
-      <RelatedProducts />
+      <RelatedProducts products={products} />
     </div>
   );
 }

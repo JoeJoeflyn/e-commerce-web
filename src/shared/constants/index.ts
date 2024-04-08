@@ -20,4 +20,10 @@ export const SORT_KEYS = Object.freeze({
   PRICE_HIGHEST_FIRST: "Price: highest first",
 });
 
+export const SORT_VALUES: { [key: string]: string } = Object.freeze({
+  [SORT_KEYS.NEWEST]: "createdAt&sortOperation=desc",
+  [SORT_KEYS.PRICE_LOWEST_FIRST]: "price&sortOperation=asc",
+  [SORT_KEYS.PRICE_HIGHEST_FIRST]: "price&sortOperation=desc",
+});
+
 export const LIMIT_PAGE = 5;
