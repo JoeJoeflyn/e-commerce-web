@@ -1,5 +1,4 @@
 import ScrollToTop from "@/components/scroll/ScrollToTop";
-import StoreProvider from "@/providers/store.provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
@@ -30,11 +29,9 @@ export default function RootLayout({
         <ToastContainer />
         <ScrollToTop />
         <Providers>
-          <StoreProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </StoreProvider>
+          <Navbar />
+          {children}
+          <Footer />
         </Providers>
       </body>
     </html>

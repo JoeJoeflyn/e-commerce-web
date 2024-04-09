@@ -32,7 +32,7 @@ export function AccountDropdown({
 }) {
   const dropdownRefVar = React.useRef<HTMLDivElement>(null);
   const [dropdownRef, isOpen, toggleDropdown] = useDropdowns(dropdownRefVar);
-  const userName = user?.data?.name;
+  const userName = user?.name;
   const hanldeDropdown = (DROPDOWN_KEYS: string) => {
     toggleDropdown(DROPDOWN_KEYS);
   };

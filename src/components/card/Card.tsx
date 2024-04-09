@@ -1,6 +1,4 @@
-import { getProducts } from "@/api";
-import { useAppSelector } from "@/hooks/redux";
-import useDebounce from "@/hooks/useDebounce";
+"use client";
 import usePagination from "@/hooks/usePagination";
 import { LIMIT_PAGE } from "@/shared/constants";
 import { Product } from "@/shared/interfaces";
@@ -12,57 +10,24 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import FavoriteItem from "../favorite/FavoriteItem";
 import React from "react";
+import "react-loading-skeleton/dist/skeleton.css";
 import Loading from "../Loading/loading";
+import FavoriteItem from "../favorite/FavoriteItem";
+
 export default function Card({
-  // isFetchingProducts,
   isListView,
   products,
   sortValue,
-}: // products,
-// nextPage,
-// prevPage,
-// handlePageButtonClick,
-// page,
-{
-  // isFetchingProducts: boolean;
+}: {
   isListView?: boolean;
   products: Product[];
   sortValue?: string;
-  // products: Product[];
-  // nextPage: () => void;
-  // prevPage: () => void;
-  // handlePageButtonClick: (index: number) => void;
-  // page: number;
 }) {
-  const { search } = useAppSelector((state) => state.search);
   const { nextPage, prevPage, handlePageButtonClick, page } = usePagination(2);
-  const debouncedSearch = useDebounce(search, 500);
   const minIdIndices = minIdImageIndices(products);
-
-  const {
-    data: _products,
-    isFetching: isFetchingProducts,
-    refetch,
-  } = useQuery({
-    queryKey: ["products", page, sortValue, debouncedSearch],
-    queryFn: () =>
-      getProducts({ page, sort: sortValue, search: debouncedSearch }),
-    // initialData: {
-    //   products,
-    // },
-  });
-
-  React.useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
 
   return (
     <>
@@ -73,13 +38,10 @@ export default function Card({
             : "grid grid-cols-2 lg:grid-cols-3 gap-y-5"
         } my-5`}
       >
-        {isFetchingProducts ? (
-          Array(7)
-            .fill(null)
-            .map((_, index) => <Loading key={index} />)
-        ) : products?.length ? (
+        {products?.length ? (
           products?.map((product: Product, index: number) => {
             const minIdImageIndex = minIdIndices[index];
+
             return isListView ? (
               <React.Suspense fallback={<Loading />} key={product.id}>
                 <Link key={product.id} href={`/product/${product.id}`}>

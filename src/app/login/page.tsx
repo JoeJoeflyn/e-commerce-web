@@ -14,15 +14,11 @@ import { LoginSchema } from "@/schema/schema";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@tanstack/react-query";
 
-import { setToken, setUser } from "@/features/user.reducer";
-import { useAppDispatch } from "@/hooks/redux";
 import useNavigate from "@/hooks/useNavigate";
 import { useRouter } from "next/navigation";
 import { NAVIGATE_KEYS } from "@/shared/constants";
 
 export default function Login() {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
   useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
 
   const [togglePassword, setTogglePassword] = React.useState(true);
@@ -32,14 +28,14 @@ export default function Login() {
       return login(user);
     },
     onSuccess(data) {
-      dispatch(setToken(data.token));
-      dispatch(setUser(data.user));
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       // Notify user for when successfully logged in
       setTimeout(() => {
-        router.push("/");
+        toast.success("You logged in successfully");
         setTimeout(() => {
-          toast.success("You logged in successfully");
+          window.location.replace("/");
         }, 1000);
       }, 1000);
     },

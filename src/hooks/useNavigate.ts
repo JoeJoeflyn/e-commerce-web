@@ -1,20 +1,23 @@
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "./redux";
+import React from "react";
 
 const useNavigate = (option: string) => {
   const router = useRouter();
-  const { user } = useAppSelector((state) => state);
 
-  if (option === "authenticated") {
-    if (!user.token) {
+  React.useEffect(() => {
+    const user = localStorage.getItem("user");
+    console.log("user check", user);
+    if (!user) {
       router.push("/login");
     }
-  }
-  if (option === "unauthenticated") {
-    if (user.token) {
-      router.back();
+
+    if (
+      (user && window.location.pathname === "/login") ||
+      window.location.pathname === "/signup"
+    ) {
+      router.push("/");
     }
-  }
+  }, []);
 };
 
 export default useNavigate;
