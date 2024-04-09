@@ -109,3 +109,38 @@ export const getProduct = async (id: number) => {
     return [];
   }
 };
+
+export const getProductsByUserId = async (queryParams: {
+  page?: number;
+  userId?: number;
+}) => {
+  const { page, userId } = queryParams;
+
+  const searchParams = new URLSearchParams();
+
+  if (page !== undefined) {
+    searchParams.set("page", page.toString());
+    searchParams.set("limit", "5");
+  }
+  if (userId !== undefined) {
+    searchParams.set("userId", userId.toString());
+  }
+
+  const decodedQuerystring = decodeURIComponent(searchParams.toString());
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/products?${decodedQuerystring}`,
+      {
+        method: "GET",
+        next: { tags: ["product-by-id"] },
+      }
+    );
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return [];
+  }
+};

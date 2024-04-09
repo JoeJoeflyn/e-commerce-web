@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBagShopping,
   faChevronDown,
-  faChevronUp,
   faClipboardList,
   faGear,
   faHeart,
@@ -62,9 +61,8 @@ export function AccountDropdown({
           {userName || "Account"}
           <FontAwesomeIcon
             width={16}
-            icon={
-              isOpen === DROPDOWN_KEYS.ACCOUNT ? faChevronUp : faChevronDown
-            }
+            icon={faChevronDown}
+            className={`${isOpen === DROPDOWN_KEYS.ACCOUNT && "rotate-180"}`}
           />
         </button>
         {isOpen === DROPDOWN_KEYS.ACCOUNT && (

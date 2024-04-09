@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Product } from "../interfaces";
 
 export const timeFormat = (time: string) => {
   // const currentTime = moment();
@@ -49,4 +50,12 @@ export const generateRandomColor = (name: string) => {
   };
 
   return HSLtoString(generateHSL(name));
+};
+
+export const minIdImageIndices = (products: Product[]) => {
+  return products?.map((product) => {
+    const ids = product?.productImages?.map((img) => img.id);
+    const minId = Math.min(...ids);
+    return product?.productImages?.findIndex((img) => img.id === minId);
+  });
 };

@@ -54,7 +54,7 @@ export default function Navbar() {
         </li>
         <li className="flex items-center gap-2 hover:text-gray-700 cursor-pointer">
           <FontAwesomeIcon width={16} icon={faRectangleList} />
-          <Link href="/management">Management</Link>
+          <Link href={`/management/${user?.data?.id}`}>Management</Link>
         </li>
         <AccountDropdown user={user} hanldeSignOut={hanldeSignOut} />
         <li className="flex items-center gap-2 font-bold uppercase text-white bg-[#FF8800] hover:bg-[#e56700] px-5 py-2 rounded cursor-pointer">

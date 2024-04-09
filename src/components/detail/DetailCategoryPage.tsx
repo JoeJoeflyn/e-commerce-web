@@ -5,7 +5,6 @@ import usePagination from "@/hooks/usePagination";
 import { DROPDOWN_KEYS, SORT_KEYS, SORT_VALUES } from "@/shared/constants";
 import {
   faAngleDown,
-  faAngleUp,
   faCheck,
   faListUl,
   faTableCellsLarge,
@@ -92,11 +91,13 @@ export default function DetailCategoryPage({
                   className="relative flex items-center gap-1 bg-[#f7f7f7] text-sm font-medium px-5 py-2 rounded-2xl h-9"
                 >
                   {selectedSortKey}
-                  {isOpen === DROPDOWN_KEYS.SORT ? (
-                    <FontAwesomeIcon width={16} icon={faAngleUp} />
-                  ) : (
-                    <FontAwesomeIcon width={16} icon={faAngleDown} />
-                  )}
+                  <FontAwesomeIcon
+                    width={16}
+                    icon={faAngleDown}
+                    className={`${
+                      isOpen === DROPDOWN_KEYS.SORT && "rotate-180"
+                    }`}
+                  />
                   {isOpen === DROPDOWN_KEYS.SORT && (
                     <div
                       ref={dropdownRef}
@@ -128,11 +129,14 @@ export default function DetailCategoryPage({
                   ) : (
                     <FontAwesomeIcon width={16} icon={faTableCellsLarge} />
                   )}
-                  {isOpen === DROPDOWN_KEYS.VIEW ? (
-                    <FontAwesomeIcon width={16} icon={faAngleUp} />
-                  ) : (
-                    <FontAwesomeIcon width={16} icon={faAngleDown} />
-                  )}
+                  <FontAwesomeIcon
+                    width={16}
+                    icon={faAngleDown}
+                    className={`${
+                      isOpen === DROPDOWN_KEYS.VIEW && "rotate-180"
+                    }`}
+                  />
+
                   {isOpen === DROPDOWN_KEYS.VIEW && (
                     <div
                       ref={dropdownRef}

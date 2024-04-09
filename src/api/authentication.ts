@@ -4,7 +4,7 @@ export const createAccount = async (newAccount: {
   password: string;
 }) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
     {
       method: "POST",
       headers: {
@@ -25,7 +25,7 @@ export const createAccount = async (newAccount: {
 
 export const login = async (user: { email: string; password: string }) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/login`,
     {
       method: "POST",
       headers: {

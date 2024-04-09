@@ -4,7 +4,7 @@ import useDebounce from "@/hooks/useDebounce";
 import usePagination from "@/hooks/usePagination";
 import { LIMIT_PAGE } from "@/shared/constants";
 import { Product } from "@/shared/interfaces";
-import { timeFormat } from "@/shared/utils";
+import { minIdImageIndices, timeFormat } from "@/shared/utils";
 import {
   faArrowLeft,
   faArrowRight,
@@ -19,6 +19,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import FavoriteItem from "../favorite/FavoriteItem";
 import React from "react";
+import Loading from "../Loading/loading";
 export default function Card({
   // isFetchingProducts,
   isListView,
@@ -43,6 +44,7 @@ export default function Card({
   const { search } = useAppSelector((state) => state.search);
   const { nextPage, prevPage, handlePageButtonClick, page } = usePagination(2);
   const debouncedSearch = useDebounce(search, 500);
+  const minIdIndices = minIdImageIndices(products);
 
   const {
     data: _products,
@@ -61,6 +63,7 @@ export default function Card({
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
+
   return (
     <>
       <div
@@ -73,24 +76,66 @@ export default function Card({
         {isFetchingProducts ? (
           Array(7)
             .fill(null)
-            .map((_, index) => (
-              <div className="rounded-b-lg p-2" key={index}>
-                <div className="relative w-full h-64">
-                  <Skeleton className="h-full rounded-b-lg" />
-                </div>
-                <div className="py-2">
-                  <Skeleton count={3} />
-                </div>
-              </div>
-            ))
-        ) : _products?.products?.length ? (
-          _products?.products?.map((product: Product) => {
+            .map((_, index) => <Loading key={index} />)
+        ) : products?.length ? (
+          products?.map((product: Product, index: number) => {
+            const minIdImageIndex = minIdIndices[index];
             return isListView ? (
-              <Link href={`/product/${product.id}`}>
-                <div className="grid grid-cols-3 py-2 px-3 gap-2">
+              <React.Suspense fallback={<Loading />} key={product.id}>
+                <Link key={product.id} href={`/product/${product.id}`}>
+                  <div className="grid grid-cols-3 py-2 px-3 gap-2">
+                    <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
+                      <Image
+                        src={product.productImages[minIdImageIndex].name}
+                        className="object-contain"
+                        alt={product.name}
+                        loading="lazy"
+                        fill={true}
+                      />
+                      <FavoriteItem />
+                    </div>
+                    <div className="col-span-2 flex flex-col justify-between gap-3">
+                      <p className="text-base hover:underline font-normal">
+                        {product.name}
+                      </p>
+                      <div className="flex-grow">
+                        <div className="font-bold flex gap-3 items-baseline">
+                          <p className="text-lg font-bold">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(product.price - product.discountPrice)}
+                          </p>
+                          <p className="text-[#707070] text-sm font-medium line-through">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(product.price)}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm font-medium text-[#707070]">
+                          <FontAwesomeIcon width={16} icon={faLocationDot} />
+                          <p className="line-clamp-1">{product.location}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm font-bold text-[#363636]">
+                        <FontAwesomeIcon width={16} icon={faClock} />
+                        {timeFormat(product.createdAt)}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </React.Suspense>
+            ) : (
+              <React.Suspense fallback={<Loading />} key={product.id}>
+                <Link
+                  href={`/product/${product.id}`}
+                  className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
+                  key={product.id}
+                >
                   <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
                     <Image
-                      src={product.productImages[0].name}
+                      src={product.productImages[minIdImageIndex].name}
                       className="object-contain"
                       alt={product.name}
                       loading="lazy"
@@ -98,79 +143,33 @@ export default function Card({
                     />
                     <FavoriteItem />
                   </div>
-                  <div className="col-span-2 flex flex-col justify-between gap-3">
-                    <p className="text-base hover:underline font-normal">
+                  <div className="flex flex-col gap-2 text-[#191919] m-1">
+                    <div className="text-base hover:underline font-normal">
                       {product.name}
-                    </p>
-                    <div className="flex-grow">
-                      <div className="font-bold flex gap-3 items-baseline">
-                        <p className="text-lg font-bold">
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                          }).format(product.price - product.discountPrice)}
-                        </p>
-                        <p className="text-[#707070] text-sm font-medium line-through">
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                          }).format(product.price)}
-                        </p>
+                    </div>
+                    <div className="font-bold flex justify-between items-baseline gap-2">
+                      <p className="text-base font-bold">
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(product.price - product.discountPrice)}
+                      </p>
+                      <p className="text-[#707070] font-semibold text-sm line-through">
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(product.price)}
+                      </p>
+                    </div>
+                    <div className="flex justify-between gap-1 text-sm font-bold text-[#363636]">
+                      <div className="flex justify-between items-center gap-1">
+                        <FontAwesomeIcon width={16} icon={faClock} />
+                        {timeFormat(product.createdAt)}
                       </div>
-                      <div className="flex items-center gap-1 text-sm font-medium text-[#707070]">
-                        <FontAwesomeIcon width={16} icon={faLocationDot} />
-                        <p className="line-clamp-1">{product.location}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1 text-sm font-bold text-[#363636]">
-                      <FontAwesomeIcon width={16} icon={faClock} />
-                      {timeFormat(product.createdAt)}
                     </div>
                   </div>
-                </div>
-              </Link>
-            ) : (
-              <Link
-                href={`/product/${product.id}`}
-                className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
-                key={product.id}
-              >
-                <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
-                  <Image
-                    src={product.productImages[0].name}
-                    className="object-contain"
-                    alt={product.name}
-                    loading="lazy"
-                    fill={true}
-                  />
-                  <FavoriteItem />
-                </div>
-                <div className="flex flex-col gap-2 text-[#191919] m-1">
-                  <div className="text-base hover:underline font-normal">
-                    {product.name}
-                  </div>
-                  <div className="font-bold flex justify-between items-baseline gap-2">
-                    <p className="text-base font-bold">
-                      {new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      }).format(product.price - product.discountPrice)}
-                    </p>
-                    <p className="text-[#707070] font-semibold text-sm line-through">
-                      {new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      }).format(product.price)}
-                    </p>
-                  </div>
-                  <div className="flex justify-between gap-1 text-sm font-bold text-[#363636]">
-                    <div className="flex justify-between items-center gap-1">
-                      <FontAwesomeIcon width={16} icon={faClock} />
-                      {timeFormat(product.createdAt)}
-                    </div>
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </React.Suspense>
             );
           })
         ) : (

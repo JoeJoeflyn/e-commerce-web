@@ -1,6 +1,8 @@
+import { Product } from "@/shared/interfaces";
+import { minIdImageIndices } from "@/shared/utils";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
@@ -10,16 +12,20 @@ import "swiper/css/scrollbar";
 import { Navigation, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import FavoriteItem from "../favorite/FavoriteItem";
-import { Product } from "@/shared/interfaces";
+import React from "react";
 
 export default function RelatedProducts({ products }: { products: Product[] }) {
+  const minIdIndices = minIdImageIndices(products);
+
   return (
     <>
       <div className="flex flex-col gap-4 p-5">
         <div className="flex flex-col md:flex-row items-baseline justify-between gap-2">
           <div className="font-bold text-2xl">Explore related items</div>
-          <div className="text-[#707070] underline">
-            Feedback on our suggestions
+          <div className="flex items-center gap-5 text-black underline">
+            <Link href="#">Feedback on our suggestions</Link>
+            <div className="bg-black h-3 w-0.5"></div>
+            <Link href={`/category/${products?.[0]?.categoryId}`}>See all</Link>
           </div>
         </div>
         <div>
@@ -50,22 +56,37 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
             modules={[Scrollbar, Navigation]}
             className="customSwiper mySwiper"
           >
-            {false
-              ? Array(7)
-                  .fill(null)
-                  .map((_, index) => (
-                    <div className={`rounded-b-lg p-2`} key={index}>
-                      <div className="relative w-full h-64">
-                        <Skeleton className="h-full rounded-b-lg" />
-                      </div>
-                      <div className="py-2">
-                        <Skeleton count={3} />
-                      </div>
-                    </div>
-                  ))
-              : products?.map((product, index) => {
-                  return (
-                    <SwiperSlide key={index}>
+            {
+              // false
+              //   ? Array(7)
+              //       .fill(null)
+              //       .map((_, index) => (
+              //         <div className={`rounded-b-lg p-2`} key={index}>
+              //           <div className="relative w-full h-64">
+              //             <Skeleton className="h-full rounded-b-lg" />
+              //           </div>
+              //           <div className="py-2">
+              //             <Skeleton count={3} />
+              //           </div>
+              //         </div>
+              //       ))
+              //   :
+              products?.map((product, index) => {
+                const minIdImageIndex = minIdIndices[index];
+                return (
+                  <SwiperSlide key={index}>
+                    <React.Suspense
+                      fallback={
+                        <div className={`rounded-b-lg p-2`} key={index}>
+                          <div className="relative w-full h-64">
+                            <Skeleton className="h-full rounded-b-lg" />
+                          </div>
+                          <div className="py-2">
+                            <Skeleton count={3} />
+                          </div>
+                        </div>
+                      }
+                    >
                       <Link
                         href={`/product/${product.id}`}
                         className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
@@ -73,7 +94,7 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
                       >
                         <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
                           <Image
-                            src={product.productImages[0].name}
+                            src={product.productImages[minIdImageIndex].name}
                             className="object-contain"
                             alt={product.name}
                             loading="lazy"
@@ -101,9 +122,11 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
                           </div>
                         </div>
                       </Link>
-                    </SwiperSlide>
-                  );
-                })}
+                    </React.Suspense>
+                  </SwiperSlide>
+                );
+              })
+            }
           </Swiper>
         </div>
       </div>

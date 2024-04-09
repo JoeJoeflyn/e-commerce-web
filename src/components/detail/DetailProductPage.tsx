@@ -192,7 +192,7 @@ export default function DetailPage({
           </div>
         </div>
         <div className="mt-3">
-          <div className="flex flex-col gap-3 sticky top-5 pt-2.5 border-t">
+          <div className="flex flex-col gap-3 sticky top-20 pt-2.5 border-t">
             <div className="flex items-start gap-3">
               <div
                 className="w-12 h-12 relative flex justify-center items-center rounded-full text-xl text-white uppercase"
