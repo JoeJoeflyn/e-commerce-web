@@ -12,21 +12,21 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import "react-loading-skeleton/dist/skeleton.css";
-import Loading from "../Loading/loading";
 import FavoriteItem from "../favorite/FavoriteItem";
 
 export default function Card({
   isListView,
   products,
-  sortValue,
+  total,
 }: {
   isListView?: boolean;
   products: Product[];
-  sortValue?: string;
+  total: number;
 }) {
-  const { nextPage, prevPage, handlePageButtonClick, page } = usePagination(2);
+  const totalPage = Math.ceil(total / LIMIT_PAGE);
+  const { nextPage, prevPage, handlePageButtonClick, page } =
+    usePagination(totalPage);
   const minIdIndices = minIdImageIndices(products);
 
   return (
@@ -41,97 +41,90 @@ export default function Card({
         {products?.length ? (
           products?.map((product: Product, index: number) => {
             const minIdImageIndex = minIdIndices[index];
-
             return isListView ? (
-              <React.Suspense fallback={<Loading />} key={product.id}>
-                <Link key={product.id} href={`/product/${product.id}`}>
-                  <div className="grid grid-cols-3 py-2 px-3 gap-2">
-                    <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
-                      <Image
-                        src={product.productImages[minIdImageIndex].name}
-                        className="object-contain"
-                        alt={product.name}
-                        loading="lazy"
-                        fill={true}
-                      />
-                      <FavoriteItem />
-                    </div>
-                    <div className="col-span-2 flex flex-col justify-between gap-3">
-                      <p className="text-base hover:underline font-normal">
-                        {product.name}
-                      </p>
-                      <div className="flex-grow">
-                        <div className="font-bold flex gap-3 items-baseline">
-                          <p className="text-lg font-bold">
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(product.price - product.discountPrice)}
-                          </p>
-                          <p className="text-[#707070] text-sm font-medium line-through">
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(product.price)}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-1 text-sm font-medium text-[#707070]">
-                          <FontAwesomeIcon width={16} icon={faLocationDot} />
-                          <p className="line-clamp-1">{product.location}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 text-sm font-bold text-[#363636]">
-                        <FontAwesomeIcon width={16} icon={faClock} />
-                        {timeFormat(product.createdAt)}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </React.Suspense>
-            ) : (
-              <React.Suspense fallback={<Loading />} key={product.id}>
-                <Link
-                  href={`/product/${product.id}`}
-                  className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
-                  key={product.id}
-                >
-                  <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
+              <Link key={product.id} href={`/product/${product.id}`}>
+                <div className="grid grid-cols-3 py-2 px-3 gap-2">
+                  <div className="relative rounded-lg h-64 bg-[#0000000D]">
                     <Image
                       src={product.productImages[minIdImageIndex].name}
-                      className="object-contain"
                       alt={product.name}
                       loading="lazy"
                       fill={true}
                     />
                     <FavoriteItem />
                   </div>
-                  <div className="flex flex-col gap-2 text-[#191919] m-1">
-                    <div className="text-base hover:underline font-normal">
+                  <div className="flex flex-col justify-between gap-3">
+                    <p className="text-base hover:underline font-normal">
                       {product.name}
-                    </div>
-                    <div className="font-bold flex justify-between items-baseline gap-2">
-                      <p className="text-base font-bold">
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(product.price - product.discountPrice)}
-                      </p>
-                      <p className="text-[#707070] font-semibold text-sm line-through">
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(product.price)}
-                      </p>
-                    </div>
-                    <div className="flex justify-between gap-1 text-sm font-bold text-[#363636]">
-                      <div className="flex justify-between items-center gap-1">
-                        <FontAwesomeIcon width={16} icon={faClock} />
-                        {timeFormat(product.createdAt)}
+                    </p>
+                    <div className="flex-grow">
+                      <div className="font-bold flex gap-3 items-baseline">
+                        <p className="text-[#e44510] text-lg font-bold">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(product.price - product.discountPrice)}
+                        </p>
+                        <p className="text-[#707070] text-sm font-medium line-through">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(product.price)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm font-medium text-[#707070]">
+                        <FontAwesomeIcon width={16} icon={faLocationDot} />
+                        <p className="line-clamp-1">{product.location}</p>
                       </div>
                     </div>
+                    <div className="flex items-center gap-1 text-sm font-bold text-[#363636]">
+                      <FontAwesomeIcon width={16} icon={faClock} />
+                      {timeFormat(product.createdAt)}
+                    </div>
                   </div>
-                </Link>
-              </React.Suspense>
+                </div>
+              </Link>
+            ) : (
+              <Link
+                key={product.id}
+                href={`/product/${product.id}`}
+                className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
+              >
+                <div className="relative rounded-lg h-60 bg-[#0000000D]">
+                  <Image
+                    src={product.productImages[minIdImageIndex].name}
+                    alt={product.name}
+                    loading="lazy"
+                    fill={true}
+                  />
+                  <FavoriteItem />
+                </div>
+                <div className="flex flex-col gap-2 text-[#191919] m-1">
+                  <div className="text-base hover:underline font-normal">
+                    {product.name}
+                  </div>
+                  <div className="font-bold flex justify-between items-baseline gap-2">
+                    <p className="text-[#e44510] text-base font-bold">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(product.price - product.discountPrice)}
+                    </p>
+                    <p className="text-[#707070] font-semibold text-sm line-through">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(product.price)}
+                    </p>
+                  </div>
+                  <div className="flex justify-between gap-1 text-sm font-bold text-[#363636]">
+                    <div className="flex justify-between items-center gap-1">
+                      <FontAwesomeIcon width={16} icon={faClock} />
+                      {timeFormat(product.createdAt)}
+                    </div>
+                  </div>
+                </div>
+              </Link>
             );
           })
         ) : (
@@ -145,7 +138,7 @@ export default function Card({
         >
           <FontAwesomeIcon width={16} icon={faArrowLeft} />
         </button>
-        {Array(Math.ceil(1 / LIMIT_PAGE))
+        {Array(totalPage)
           .fill(null)
           .map((_, index) => (
             <button

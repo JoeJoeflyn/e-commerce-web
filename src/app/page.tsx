@@ -1,19 +1,24 @@
 import { getAllCategories, getProducts } from "@/api";
 import Home from "@/components/home/HomePage";
+import { LIMIT_PAGE } from "@/shared/constants";
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { page: number };
+}) {
   const results = await Promise.allSettled([
     getAllCategories(),
     getProducts({
-      page: 1,
-      categoryId: [],
+      page: searchParams.page || 1,
+      limit: LIMIT_PAGE,
     }),
   ]);
 
   const categories =
     results[0].status === "fulfilled" ? results[0].value.categories : [];
-  const products =
-    results[1].status === "fulfilled" ? results[1].value.products : [];
+  const { products, total } =
+    results[1].status === "fulfilled" ? results[1].value : [];
 
-  return <Home categories={categories} products={products} />;
+  return <Home categories={categories} products={products} total={total} />;
 }

@@ -56,77 +56,47 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
             modules={[Scrollbar, Navigation]}
             className="customSwiper mySwiper"
           >
-            {
-              // false
-              //   ? Array(7)
-              //       .fill(null)
-              //       .map((_, index) => (
-              //         <div className={`rounded-b-lg p-2`} key={index}>
-              //           <div className="relative w-full h-64">
-              //             <Skeleton className="h-full rounded-b-lg" />
-              //           </div>
-              //           <div className="py-2">
-              //             <Skeleton count={3} />
-              //           </div>
-              //         </div>
-              //       ))
-              //   :
-              products?.map((product, index) => {
-                const minIdImageIndex = minIdIndices[index];
-                return (
-                  <SwiperSlide key={index}>
-                    <React.Suspense
-                      fallback={
-                        <div className={`rounded-b-lg p-2`} key={index}>
-                          <div className="relative w-full h-64">
-                            <Skeleton className="h-full rounded-b-lg" />
-                          </div>
-                          <div className="py-2">
-                            <Skeleton count={3} />
-                          </div>
-                        </div>
-                      }
-                    >
-                      <Link
-                        href={`/product/${product.id}`}
-                        className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
-                        key={product.id}
-                      >
-                        <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
-                          <Image
-                            src={product.productImages[minIdImageIndex].name}
-                            className="object-contain"
-                            alt={product.name}
-                            loading="lazy"
-                            fill={true}
-                          />
-                          <FavoriteItem />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#191919] m-1">
-                          <div className="text-base hover:underline font-normal">
-                            {product.name}
-                          </div>
-                          <div className="font-bold flex justify-between items-baseline gap-2">
-                            <p className="text-base font-bold">
-                              {new Intl.NumberFormat("en-US", {
-                                style: "currency",
-                                currency: "USD",
-                              }).format(product.price - product.discountPrice)}
-                            </p>
-                            <p className="text-[#707070] font-semibold text-sm line-through">
-                              {new Intl.NumberFormat("en-US", {
-                                style: "currency",
-                                currency: "USD",
-                              }).format(product.price)}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    </React.Suspense>
-                  </SwiperSlide>
-                );
-              })
-            }
+            {products?.map((product, index) => {
+              const minIdImageIndex = minIdIndices[index];
+              return (
+                <SwiperSlide key={product.id}>
+                  <Link
+                    href={`/product/${product.id}`}
+                    className={`p-2 cursor-pointer ${true ? "" : "hidden"}`}
+                  >
+                    <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
+                      <Image
+                        src={product.productImages[minIdImageIndex].name}
+                        className="object-contain"
+                        alt={product.name}
+                        loading="lazy"
+                        fill={true}
+                      />
+                      <FavoriteItem />
+                    </div>
+                    <div className="flex flex-col gap-2 text-[#191919] m-1">
+                      <div className="text-base hover:underline font-normal">
+                        {product.name}
+                      </div>
+                      <div className="font-bold flex justify-between items-baseline gap-2">
+                        <p className="text-base font-bold">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(product.price - product.discountPrice)}
+                        </p>
+                        <p className="text-[#707070] font-semibold text-sm line-through">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(product.price)}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </div>
       </div>

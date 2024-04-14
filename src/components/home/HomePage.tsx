@@ -1,23 +1,23 @@
 "use client";
-
 import { Category, Product } from "@/shared/interfaces";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
 import Link from "next/link";
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import Card from "../card/Card";
 
 export default function Home({
   categories,
   products,
+  total,
 }: {
   categories: Category[];
   products: Product[];
+  total: number;
 }) {
   return (
     <>
@@ -103,15 +103,7 @@ export default function Home({
         </div>
         <div className="shadow p-3 my-5">
           <p className="font-bold text-lg">Products</p>
-          <Card
-            products={products}
-            // nextPage={nextPage}
-            // prevPage={prevPage}
-            // handlePageButtonClick={handlePageButtonClick}
-            // page={page}
-            // products={_products?.products}
-            // isFetchingProducts={isFetchingProducts}
-          />
+          <Card products={products} total={total} />
         </div>
       </div>
     </>

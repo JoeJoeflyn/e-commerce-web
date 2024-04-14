@@ -10,7 +10,7 @@ export const timeFormat = (time: string) => {
 
 export const avatarGenerateSplit = (name: string) => {
   const nameSplit = name
-    .split(" ")
+    ?.split(" ")
     .map((word) => {
       if (word.length < 2) return;
       return word[0];
@@ -26,8 +26,8 @@ export const generateRandomColor = (name: string) => {
   const lRange = [25, 60];
   const getHashOfString = (str: string) => {
     let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < str?.length; i++) {
+      hash = str?.charCodeAt(i) + ((hash << 5) - hash);
     }
     hash = Math.abs(hash);
     return hash;

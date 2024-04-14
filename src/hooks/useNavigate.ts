@@ -6,7 +6,7 @@ const useNavigate = (option: string) => {
 
   React.useEffect(() => {
     const user = localStorage.getItem("user");
-    console.log("user check", user);
+
     if (!user) {
       router.push("/login");
     }
@@ -17,6 +17,7 @@ const useNavigate = (option: string) => {
     ) {
       router.push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 

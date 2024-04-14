@@ -19,7 +19,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { PhotoProvider, PhotoSlider, PhotoView } from "react-photo-view";
+import React from "react";
+import { PhotoSlider } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -28,9 +29,6 @@ import "swiper/css/scrollbar";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import RelatedProducts from "../relatedProduct/RelatedProducts";
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/api";
-import React from "react";
 
 export default function DetailPage({
   product,
@@ -42,19 +40,6 @@ export default function DetailPage({
   const { productImages, user } = product;
   const [visible, setVisible] = React.useState(false);
   const [index, setIndex] = React.useState(0);
-  // const {
-  //   data: _products,
-  //   isFetching: isFetchingProducts,
-  //   refetch,
-  // } = useQuery({
-  //   queryKey: ["relatedProducts", product.category.id],
-  //   queryFn: () =>
-  //     getProducts({
-  //       page: 1,
-  //       categoryId: [product.category.id],
-  //     }),
-  //   enabled: !!product.category.id,
-  // });
 
   return (
     <div className="bg-white max-w-5xl mx-auto my-5">
@@ -89,7 +74,7 @@ export default function DetailPage({
                     key={image.id}
                     className="p-3 shadow object-contain"
                     src={image.name}
-                    layout="fill"
+                    fill={true}
                     alt={image.name}
                     loading="lazy"
                   />
@@ -114,7 +99,7 @@ export default function DetailPage({
             <div className="flex flex-col gap-3 mt-2">
               <p className="font-bold text-xl">{product?.name}</p>
               <div className="font-bold flex items-baseline gap-2">
-                <p className="text-lg font-bold">
+                <p className="text-[#e44510] text-lg font-bold">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",

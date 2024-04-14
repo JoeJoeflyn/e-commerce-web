@@ -1,19 +1,21 @@
 import { getProduct, getProducts } from "@/api";
 import DetailProductPage from "@/components/detail/DetailProductPage";
+import { LIMIT_PAGE } from "@/shared/constants";
+import { Product } from "@/shared/interfaces";
+
+export async function generateStaticParams() {
+  const { products } = await getProducts();
+
+  return products?.map((product: Product) => ({ id: `${product.id}` }));
+}
 
 export default async function Page({ params }: { params: { id: number } }) {
-  const results = await Promise.allSettled([
-    getProduct(params.id),
-    getProducts({
-      page: 1,
-      categoryId: [],
-    }),
-  ]);
+  const { product } = await getProduct(params.id);
 
-  const product =
-    results[0].status === "fulfilled" ? results[0].value.product : [];
-  const products =
-    results[1].status === "fulfilled" ? results[1].value.products : [];
+  const { products } = await getProducts({
+    limit: LIMIT_PAGE,
+    categoryId: [product?.categoryId],
+  });
 
   return <DetailProductPage product={product} products={products} />;
 }

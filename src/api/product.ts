@@ -1,4 +1,5 @@
-import axios from "axios";
+import { revalidateTag } from "next/cache";
+import { headers } from "./config";
 
 export const createProduct = async (newProduct: {
   files: File[];
@@ -45,27 +46,34 @@ export const createProduct = async (newProduct: {
   return parseResponse;
 };
 
-export const getProducts = async (queryParams: {
+export const getProducts = async (queryParams?: {
   page?: number;
   search?: string;
   categoryId?: number[];
+  limit?: number;
   sort?: string;
+  sortOperation?: string;
 }) => {
-  const { page, search, categoryId, sort } = queryParams;
+  const { page, search, categoryId, sort, limit, sortOperation } =
+    queryParams || {};
 
   const searchParams = new URLSearchParams();
 
   if (page !== undefined) {
     searchParams.set("page", page.toString());
-    searchParams.set("limit", "5");
+  }
+
+  if (limit) {
+    searchParams.set("limit", limit.toString());
   }
 
   if (search) {
     searchParams.set("search", search);
   }
 
-  if (sort) {
+  if (sort && sortOperation) {
     searchParams.set("sort", sort);
+    searchParams.set("sortOperation", sortOperation);
   }
 
   if (categoryId?.length !== 0) {
@@ -81,9 +89,10 @@ export const getProducts = async (queryParams: {
       `${process.env.NEXT_PUBLIC_API_URL}/products?${decodedQuerystring}`,
       {
         method: "GET",
-        next: { tags: ["list-products"] },
+        next: { tags: ["list-products"], revalidate: 60000 },
       }
     );
+
     const data = await res.json();
 
     return data;
@@ -113,27 +122,33 @@ export const getProduct = async (id: number) => {
 export const getProductsByUserId = async (queryParams: {
   page?: number;
   userId?: number;
+  limit?: number;
 }) => {
-  const { page, userId } = queryParams;
+  const { page, userId, limit } = queryParams;
 
   const searchParams = new URLSearchParams();
 
   if (page !== undefined) {
     searchParams.set("page", page.toString());
-    searchParams.set("limit", "5");
+  }
+  if (limit) {
+    searchParams.set("limit", limit.toString());
   }
   if (userId !== undefined) {
     searchParams.set("userId", userId.toString());
   }
 
   const decodedQuerystring = decodeURIComponent(searchParams.toString());
-
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/user/products?${decodedQuerystring}`,
       {
         method: "GET",
-        next: { tags: ["product-by-id"] },
+        headers: {
+          ...headers({
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          }),
+        },
       }
     );
 

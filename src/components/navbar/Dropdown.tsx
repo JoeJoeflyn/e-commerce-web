@@ -19,15 +19,15 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { RootState } from "@/store";
 import React from "react";
 import useDropdowns from "@/hooks/useDropdowns";
+import { User } from "@/shared/interfaces/user";
 
 export function AccountDropdown({
   user,
   hanldeSignOut,
 }: {
-  user: RootState;
+  user: User;
   hanldeSignOut: () => void;
 }) {
   const dropdownRefVar = React.useRef<HTMLDivElement>(null);
