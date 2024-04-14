@@ -1,8 +1,5 @@
 "use client";
 import { removeToken } from "@/api";
-import { setToken, setUser } from "@/features";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import useDropdowns from "@/hooks/useDropdowns";
 import { faBell, faRectangleList } from "@fortawesome/free-regular-svg-icons";
 import {
   faBagShopping,
@@ -20,16 +17,20 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const noNav = ["/login", "/signup"];
-  const { user } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const [user, setUser] = React.useState(null);
 
   const hanldeSignOut = () => {
     removeToken();
-    dispatch(setUser(""));
-    dispatch(setToken(""));
     router.push("/");
     window.location.reload();
   };
+
+  React.useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setUser(JSON.parse(user));
+    }
+  }, []);
 
   return noNav.includes(pathname) ? null : (
     <div className="sticky top-0 z-10">
@@ -45,7 +46,7 @@ export default function Navbar() {
             />
           </Link>
         </li>
-        <SearchBar dispatch={dispatch} />
+        <SearchBar />
         <li className="flex items-center gap-2 hover:text-gray-700 cursor-pointer">
           <FontAwesomeIcon width={16} icon={faBell} />
         </li>

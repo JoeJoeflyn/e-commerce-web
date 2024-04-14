@@ -1,4 +1,4 @@
-import { getProducts } from "@/api";
+"use client";
 import { useAppSelector } from "@/hooks/redux";
 import useDebounce from "@/hooks/useDebounce";
 import usePagination from "@/hooks/usePagination";
@@ -12,55 +12,22 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import FavoriteItem from "../favorite/FavoriteItem";
-import React from "react";
 export default function Card({
   // isFetchingProducts,
   isListView,
   products,
   sortValue,
-}: // products,
-// nextPage,
-// prevPage,
-// handlePageButtonClick,
-// page,
-{
-  // isFetchingProducts: boolean;
+}: {
   isListView?: boolean;
   products: Product[];
   sortValue?: string;
-  // products: Product[];
-  // nextPage: () => void;
-  // prevPage: () => void;
-  // handlePageButtonClick: (index: number) => void;
-  // page: number;
 }) {
-  const { search } = useAppSelector((state) => state.search);
   const { nextPage, prevPage, handlePageButtonClick, page } = usePagination(2);
-  const debouncedSearch = useDebounce(search, 500);
 
-  const {
-    data: _products,
-    isFetching: isFetchingProducts,
-    refetch,
-  } = useQuery({
-    queryKey: ["products", page, sortValue, debouncedSearch],
-    queryFn: () =>
-      getProducts({ page, sort: sortValue, search: debouncedSearch }),
-    // initialData: {
-    //   products,
-    // },
-  });
-
-  React.useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
   return (
     <>
       <div
@@ -70,21 +37,8 @@ export default function Card({
             : "grid grid-cols-2 lg:grid-cols-3 gap-y-5"
         } my-5`}
       >
-        {isFetchingProducts ? (
-          Array(7)
-            .fill(null)
-            .map((_, index) => (
-              <div className="rounded-b-lg p-2" key={index}>
-                <div className="relative w-full h-64">
-                  <Skeleton className="h-full rounded-b-lg" />
-                </div>
-                <div className="py-2">
-                  <Skeleton count={3} />
-                </div>
-              </div>
-            ))
-        ) : _products?.products?.length ? (
-          _products?.products?.map((product: Product) => {
+        {products?.length ? (
+          products?.map((product: Product) => {
             return isListView ? (
               <Link href={`/product/${product.id}`}>
                 <div className="grid grid-cols-3 py-2 px-3 gap-2">
