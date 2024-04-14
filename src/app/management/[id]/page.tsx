@@ -1,6 +1,8 @@
 "use client";
-import { getProduct, getProductsByUserId } from "@/api";
+import { getProductsByUserId } from "@/api";
+import Modal from "@/components/modal/modal";
 import useGetUser from "@/hooks/useGetUser";
+import useModal from "@/hooks/useModal";
 import useNavigate from "@/hooks/useNavigate";
 import { LIMIT_PAGE, NAVIGATE_KEYS } from "@/shared/constants";
 import { Product } from "@/shared/interfaces";
@@ -22,7 +24,7 @@ import {
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -35,6 +37,7 @@ export default function Management() {
   const queryClient = useQueryClient();
   const params = useParams();
   const { user } = useGetUser();
+  const { onOpenModal, onCloseModal } = useModal();
   const [minIdIndices, setMinIdIndices] = React.useState<number[]>([]);
   const [page, setPage] = React.useState(1);
   const { data, isLoading } = useQuery({
@@ -104,6 +107,10 @@ export default function Management() {
           <p>Your list items</p>
         </div>
       </div>
+      {data?.error && <p className="bg-white text-base p-3">{data?.error}</p>}
+      {data?.length && (
+        <p className="bg-white text-base p-3">List some product</p>
+      )}
       {isLoading
         ? Array(5)
             .fill(null)
@@ -233,9 +240,7 @@ export default function Management() {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-1 text-sm font-bold">
-                    <button className="px-3 py-2 text-white bg-sky-500 hover:bg-sky-600 rounded-xl">
-                      <FontAwesomeIcon width={16} icon={faPen} />
-                    </button>
+                    <Modal />
                     <Link
                       href={`/product/${product?.id}`}
                       className="px-3 py-2 text-white text-center bg-slate-400 hover:bg-slate-500 rounded-xl"
