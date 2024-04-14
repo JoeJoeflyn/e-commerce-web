@@ -28,7 +28,8 @@
     "hanlde",
     "localstorage",
     "signup",
-    "tanstack"
+    "tanstack",
+    "Watchlist"
   ],
   "auto-close-tag.activationOnLanguage": [
     "xml",

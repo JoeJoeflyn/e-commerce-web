@@ -1,6 +1,10 @@
 "use client";
 import { createProduct, getAllCategories } from "@/api/";
+import useImageUploadHandler from "@/hooks/useFileHandler";
+import useGetUser from "@/hooks/useGetUser";
+import useNavigate from "@/hooks/useNavigate";
 import { ProductSchema } from "@/schema/schema";
+import { NAVIGATE_KEYS } from "@/shared/constants";
 import { faClose, faImage, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -12,45 +16,11 @@ import { NumericFormat } from "react-number-format";
 import { toast } from "react-toastify";
 
 export default function Sell() {
+  useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
   const router = useRouter();
-
-  const [previewImages, setPreviewImages] = React.useState<string[]>([]);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    const imageFiles = Array.from(files as FileList).filter((file) =>
-      file.type.startsWith("image/")
-    );
-
-    const imageUrls: string[] = imageFiles.map((file) => {
-      return URL.createObjectURL(file);
-    });
-
-    const totalImages = previewImages.length + imageUrls.length;
-
-    if (totalImages > 6) {
-      toast.error("Only 6 images can be uploaded");
-      const remainingSpace = 6 - previewImages.length;
-      const imagesToAdd = imageUrls.slice(0, remainingSpace);
-
-      setPreviewImages([...previewImages, ...imagesToAdd]);
-      return;
-    }
-
-    if (previewImages.length < 6) {
-      const remainingSpace = 6 - previewImages.length;
-      const imagesToAdd = imageUrls.slice(0, remainingSpace);
-      setPreviewImages([...previewImages, ...imagesToAdd]);
-    } else {
-      toast.error("Only 6 images can be uploaded");
-    }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    const updatedImages = [...previewImages];
-    updatedImages.splice(index, 1);
-    setPreviewImages(updatedImages);
-  };
+  const { user } = useGetUser();
+  const { previewImages, handleFileChange, handleRemoveImage, emptyImage } =
+    useImageUploadHandler();
 
   const { data } = useQuery({
     queryKey: ["categories"],
@@ -70,7 +40,7 @@ export default function Sell() {
 
   return (
     <>
-      <div className="grid place-items-center my-10">
+      <div className="grid max-w-5xl mx-auto my-10">
         <Formik
           initialValues={{
             category: "",
@@ -87,6 +57,7 @@ export default function Sell() {
           onSubmit={(values, { setSubmitting, resetForm }) => {
             mutate({
               ...values,
+              userId: user.id.toString(),
               price: +values.price.replace(/,/g, ""),
               discount: +values.discount.replace(/,/g, ""),
               quantity: +values.quantity.replace(/,/g, ""),
@@ -107,7 +78,7 @@ export default function Sell() {
                 files: [],
               },
             });
-            setPreviewImages([]);
+            emptyImage();
           }}
         >
           {({
@@ -123,8 +94,8 @@ export default function Sell() {
               <div>
                 <p className="text-base font-bold">Product images</p>
                 {previewImages.length !== 0 ? (
-                  <div className="grid grid-cols-3 gap-3 mt-5">
-                    <div className="relative border-dotted h-28 xl:w-28 rounded-lg border-2 border-[#f80] bg-gray-100 flex justify-center items-center">
+                  <div className="grid grid-cols-3 gap-2 mt-5">
+                    <div className="relative border-dotted rounded-lg border-2 border-[#f80] bg-gray-100 flex justify-center items-center">
                       <div className="absolute">
                         <div className="flex flex-col items-center">
                           <FontAwesomeIcon
@@ -156,20 +127,17 @@ export default function Sell() {
                           alt={`Preview ${index}`}
                           fill={true}
                           objectFit="contain"
-                          className="border border-gray-300 border-solid w-full h-auto"
+                          className="border border-gray-300 border-solid"
                         />
-                        {index === 0 ? (
+                        {index === 0 && (
                           <p className="absolute bottom-0 left-0 bg-black text-white text-xs text-center w-full p-1 opacity-80">
                             Cover image
                           </p>
-                        ) : (
-                          ""
                         )}
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(index)}
-                          className="absolute -top-2 -right-2 bg-black text-white px-2 rounded-full"
-                          style={{ zIndex: 1, borderRadius: "50%" }}
+                          className="absolute -top-2 -right-2 bg-black text-white w-6 h-6 flex items-center justify-center rounded-full z-10"
                         >
                           <FontAwesomeIcon
                             icon={faClose}

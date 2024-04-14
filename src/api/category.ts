@@ -2,9 +2,12 @@ import axios from "axios";
 
 export const getAllCategories = async () => {
   try {
-    const { data } = await axios(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories`
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
+      method: "GET",
+      next: { tags: ["list-categories"] },
+    });
+
+    const data = await res.json();
 
     return data;
   } catch (error) {

@@ -1,15 +1,16 @@
 import moment from "moment";
+import { Product } from "../interfaces";
 
 export const timeFormat = (time: string) => {
-  const currentTime = moment();
-  const targetTime = moment(time);
+  // const currentTime = moment();
+  const targetTime = moment(time, "YYYY-MM-DD HH:mm:ss");
 
-  return targetTime.from(currentTime);
+  return targetTime.fromNow();
 };
 
 export const avatarGenerateSplit = (name: string) => {
   const nameSplit = name
-    .split(" ")
+    ?.split(" ")
     .map((word) => {
       if (word.length < 2) return;
       return word[0];
@@ -25,8 +26,8 @@ export const generateRandomColor = (name: string) => {
   const lRange = [25, 60];
   const getHashOfString = (str: string) => {
     let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < str?.length; i++) {
+      hash = str?.charCodeAt(i) + ((hash << 5) - hash);
     }
     hash = Math.abs(hash);
     return hash;
@@ -49,4 +50,12 @@ export const generateRandomColor = (name: string) => {
   };
 
   return HSLtoString(generateHSL(name));
+};
+
+export const minIdImageIndices = (products: Product[]) => {
+  return products?.map((product) => {
+    const ids = product?.productImages?.map((img) => img.id);
+    const minId = Math.min(...ids);
+    return product?.productImages?.findIndex((img) => img.id === minId);
+  });
 };

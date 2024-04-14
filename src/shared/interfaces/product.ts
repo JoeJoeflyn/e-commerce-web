@@ -2,6 +2,7 @@ import { Category } from ".";
 
 export type Product = {
   id: number;
+  categoryId: number;
   name: string;
   description: string;
   price: number;
@@ -20,4 +21,8 @@ export type Product = {
     status: string;
     createdAt: string;
   }[];
+  user: {
+    name: string;
+    email: string;
+  };
 };
