@@ -27,3 +27,28 @@ export const SORT_VALUES: { [key: string]: string } = Object.freeze({
 });
 
 export const LIMIT_PAGE = 6;
+
+export const STALE_TIME = 60;
+
+export const initialFormValues = {
+  category: "",
+  name: "",
+  description: "",
+  price: "",
+  discount: "",
+  quantity: "",
+  contact: "",
+  location: "",
+  files: [],
+};
+
+export const formFields = [
+  { name: "category", type: "select", options: [] },
+  { name: "name", type: "text" },
+  { name: "description", type: "text" },
+  { name: "price", type: "numeric" },
+  { name: "discount", type: "numeric" },
+  { name: "quantity", type: "numeric" },
+  { name: "contact", type: "text" },
+  { name: "location", type: "text" },
+];

@@ -2,8 +2,6 @@ import { Product } from "@/shared/interfaces";
 import { minIdImageIndices } from "@/shared/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -12,7 +10,6 @@ import "swiper/css/scrollbar";
 import { Navigation, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import FavoriteItem from "../favorite/FavoriteItem";
-import React from "react";
 
 export default function RelatedProducts({ products }: { products: Product[] }) {
   const minIdIndices = minIdImageIndices(products);
@@ -66,9 +63,9 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
                   >
                     <div className="relative w-full rounded-lg h-64 bg-[#0000000D]">
                       <Image
-                        src={product.productImages[minIdImageIndex].name}
+                        src={product.productImages[minIdImageIndex].url}
                         className="object-contain"
-                        alt={product.name}
+                        alt={product.productImages[minIdImageIndex].name}
                         loading="lazy"
                         fill={true}
                       />

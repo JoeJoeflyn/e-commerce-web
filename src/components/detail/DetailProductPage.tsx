@@ -73,7 +73,7 @@ export default function DetailPage({
                   <Image
                     key={image.id}
                     className="p-3 shadow object-contain"
-                    src={image.name}
+                    src={image.url}
                     fill={true}
                     alt={image.name}
                     loading="lazy"
@@ -83,7 +83,7 @@ export default function DetailPage({
             ))}
             <PhotoSlider
               images={productImages.map((item) => ({
-                src: item.name,
+                src: item.url,
                 key: item.id,
               }))}
               visible={visible}

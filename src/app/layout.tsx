@@ -5,8 +5,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
-import "./globals.css";
 import Providers from "../providers/provider";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin-ext"] });
 

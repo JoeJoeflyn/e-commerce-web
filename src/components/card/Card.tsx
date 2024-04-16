@@ -46,8 +46,8 @@ export default function Card({
                 <div className="grid grid-cols-3 py-2 px-3 gap-2">
                   <div className="relative rounded-lg h-64 bg-[#0000000D]">
                     <Image
-                      src={product.productImages[minIdImageIndex].name}
-                      alt={product.name}
+                      src={product.productImages[minIdImageIndex].url}
+                      alt={product.productImages[minIdImageIndex].name}
                       loading="lazy"
                       fill={true}
                     />
@@ -92,8 +92,8 @@ export default function Card({
               >
                 <div className="relative rounded-lg h-60 bg-[#0000000D]">
                   <Image
-                    src={product.productImages[minIdImageIndex].name}
-                    alt={product.name}
+                    src={product.productImages[minIdImageIndex].url}
+                    alt={product.productImages[minIdImageIndex].name}
                     loading="lazy"
                     fill={true}
                   />
