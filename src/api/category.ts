@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const getAllCategories = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {

@@ -1,4 +1,3 @@
-import { revalidateTag } from "next/cache";
 import { headers } from "./config";
 
 export const createProduct = async (newProduct: {
@@ -144,6 +143,28 @@ export const getProductsByUserId = async (queryParams: {
       `${process.env.NEXT_PUBLIC_API_URL}/user/products?${decodedQuerystring}`,
       {
         method: "GET",
+        headers: {
+          ...headers({
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          }),
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const deleteImage = async (id: number) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/products/deleteImage/${id}`,
+      {
+        method: "DELETE",
         headers: {
           ...headers({
             Authorization: "Bearer " + localStorage.getItem("token"),
