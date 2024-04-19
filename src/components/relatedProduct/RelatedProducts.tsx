@@ -80,7 +80,7 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
                           {new Intl.NumberFormat("en-US", {
                             style: "currency",
                             currency: "USD",
-                          }).format(product.price - product.discountPrice)}
+                          }).format(product.price - product.discount)}
                         </p>
                         <p className="text-[#707070] font-semibold text-sm line-through">
                           {new Intl.NumberFormat("en-US", {

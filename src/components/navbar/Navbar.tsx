@@ -12,12 +12,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AccountDropdown } from "./Dropdown";
 import { SearchBar } from "./SearchBar";
+import useModal from "@/hooks/useModal";
+import React from "react";
+import { FormikProps } from "formik";
+import Modal from "../modal/modal";
+import FormItem from "../formItem/page";
 
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const noNav = ["/login", "/signup"];
   const { user } = useGetUser();
+  const { open, openModal, closeModal, productId } = useModal();
+  const formRef = React.useRef<FormikProps<any> | null>(null);
 
   const hanldeSignOut = () => {
     removeToken();
@@ -58,15 +65,22 @@ export default function Navbar() {
         </li>
         <AccountDropdown user={user} hanldeSignOut={hanldeSignOut} />
         <li>
-          <Link
+          <button
+            onClick={() => openModal()}
             className="flex items-center gap-2 font-bold uppercase text-white bg-[#FF8800] hover:bg-[#e56700] h-full px-5 py-2 rounded cursor-pointer"
-            href="/sell"
           >
             <FontAwesomeIcon width={16} icon={faPenToSquare} />
             Sell
-          </Link>
+          </button>
         </li>
       </ul>
+      <Modal mode="add" formRef={formRef} open={open} closeModal={closeModal}>
+        <FormItem
+          formRef={formRef}
+          productId={productId}
+          closeModal={closeModal}
+        />
+      </Modal>
     </div>
   );
 }

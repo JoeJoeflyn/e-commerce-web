@@ -1,9 +1,9 @@
 "use client";
 import FormItem from "@/components/formItem/page";
 import ManagementLoading from "@/components/loading/managementLoading";
+import ManagementProductCard from "@/components/managementProductCard/managementProductCard";
 import Modal from "@/components/modal/modal";
 import Pagination from "@/components/pagination/pagination";
-import ProductCard from "@/components/productCard/productCard";
 import { usePrefetchProductsByUserId } from "@/hooks/reactQuery/usePrefetchProductsByUserId";
 import useGetUser from "@/hooks/useGetUser";
 import useModal from "@/hooks/useModal";
@@ -25,9 +25,8 @@ import "react-loading-skeleton/dist/skeleton.css";
 export default function Management() {
   useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
   const params = useParams();
-  const { open, toggleModal, productId } = useModal();
+  const { open, openModal, closeModal, productId } = useModal();
   const { user } = useGetUser();
-  const [minIdIndices, setMinIdIndices] = React.useState<number[]>([]);
   const [page, setPage] = React.useState(1);
   const formRef = React.useRef<FormikProps<any> | null>(null);
   const { data, isLoading, totalPage } = usePrefetchProductsByUserId(
@@ -35,15 +34,19 @@ export default function Management() {
     +params?.id
   );
 
-  React.useEffect(() => {
-    setMinIdIndices(minIdImageIndices(data?.products));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.products]);
+  const minIdIndices = React.useMemo(
+    () => minIdImageIndices(data?.products),
+    [data?.products]
+  );
 
   return (
     <>
-      <Modal formRef={formRef} open={open} toggleModal={toggleModal}>
-        <FormItem formRef={formRef} productId={productId} />
+      <Modal mode="edit" formRef={formRef} open={open} closeModal={closeModal}>
+        <FormItem
+          formRef={formRef}
+          productId={productId}
+          closeModal={closeModal}
+        />
       </Modal>
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col p-3 gap-3 border border-[#e8e8e8] bg-white ">
@@ -86,10 +89,10 @@ export default function Management() {
           : data?.products?.map((product: Product, index: number) => {
               const minIdImageIndex = minIdIndices?.[index];
               return (
-                <ProductCard
+                <ManagementProductCard
                   key={product?.id}
                   product={product}
-                  toggleModal={toggleModal}
+                  openModal={openModal}
                   minIdImageIndex={minIdImageIndex}
                 />
               );

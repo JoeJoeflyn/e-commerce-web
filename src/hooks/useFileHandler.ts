@@ -38,15 +38,15 @@ const useImageUploadHandler = () => {
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setPreviewImages(previewImages.filter((_, i) => i !== index));
+  const handleRemoveImage = (url: string) => {
+    setPreviewImages(previewImages.filter((imageUrl) => imageUrl !== url));
   };
 
-  const emptyImage = () => {
-    setPreviewImages([]);
+  return {
+    previewImages,
+    handleFileChange,
+    handleRemoveImage,
   };
-
-  return { previewImages, handleFileChange, handleRemoveImage, emptyImage };
 };
 
 export default useImageUploadHandler;

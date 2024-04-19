@@ -1,7 +1,6 @@
 export const headers = (options?: { Authorization: string }) => {
   return {
     ...options,
-    "Content-Type": "application/json",
   };
 };
 

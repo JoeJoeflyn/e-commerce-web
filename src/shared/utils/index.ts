@@ -59,3 +59,7 @@ export const minIdImageIndices = (products: Product[]) => {
     return product?.productImages?.findIndex((img) => img.id === minId);
   });
 };
+
+export function createMarkup(dirty: string) {
+  return { __html: dirty };
+}

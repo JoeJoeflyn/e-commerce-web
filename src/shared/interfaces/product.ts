@@ -6,7 +6,7 @@ export type Product = {
   name: string;
   description: string;
   price: number;
-  discountPrice: number;
+  discount: number;
   quantity: number;
   contact: string;
   location: string;
@@ -31,7 +31,7 @@ export type ProductImages = {
 }[];
 
 export type FormFields = {
-  category: string;
+  categoryId: string;
   name: string;
   description: string;
   price: string;

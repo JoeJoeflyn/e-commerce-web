@@ -4,9 +4,7 @@ import { ProductImages } from "@/shared/interfaces";
 import { useQuery } from "@tanstack/react-query";
 
 export default function usePrefetchProductUser(productId: number) {
-  console.log("productId", productId);
-
-  const { data: product } = useQuery({
+  const { data: product, isFetching } = useQuery({
     queryKey: ["editProduct", productId],
     queryFn: () => getProduct(productId),
     staleTime: STALE_TIME * 1000,
@@ -19,19 +17,24 @@ export default function usePrefetchProductUser(productId: number) {
   });
 
   const formFields = [
-    { name: "category", type: "select", options: categories?.categories },
+    { name: "categoryId", type: "select", options: categories?.categories },
     { name: "name", type: "text" },
-    { name: "description", type: "text" },
     { name: "price", type: "numeric" },
     { name: "discount", type: "numeric" },
     { name: "quantity", type: "numeric" },
     { name: "contact", type: "text" },
     { name: "location", type: "text" },
+    { name: "description", type: "text" },
   ];
 
   const productImages = product?.product?.productImages?.map(
     (image: ProductImages) => image
   );
 
-  return { product, productImages, formFields };
+  return {
+    product,
+    productImages,
+    formFields,
+    isFetching,
+  };
 }

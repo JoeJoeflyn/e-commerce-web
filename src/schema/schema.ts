@@ -19,14 +19,14 @@ export const LoginSchema = Yup.object().shape({
 });
 
 export const ProductSchema = Yup.object().shape({
-  category: Yup.string().required("Category is required!"),
+  categoryId: Yup.string().required("Category is required!"),
   name: Yup.string()
     .max(50, "Your Product name too Long!")
     .required("Product name is required!"),
-  description: Yup.string().required("Description is required!"),
   price: Yup.string().required("Price is required!"),
   discount: Yup.string().required("Discount is required!"),
   quantity: Yup.string().required("Quantity is required!"),
   contact: Yup.string().required("Contact is required!"),
   location: Yup.string().required("Location is required!"),
+  description: Yup.string().required("Description is required!"),
 });
