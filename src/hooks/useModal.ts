@@ -4,12 +4,16 @@ const useModal = () => {
   const [open, setOpen] = useState(false);
   const [productId, setProductId] = useState<number>();
 
-  const toggleModal = (productId?: number) => {
-    setOpen((prev) => !prev);
+  const openModal = (productId?: number) => {
+    setOpen(true);
     setProductId(productId);
   };
 
-  return { open, toggleModal, productId };
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  return { open, openModal, closeModal, productId };
 };
 
 export default useModal;

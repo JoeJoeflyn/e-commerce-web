@@ -59,7 +59,7 @@ export default function DetailCategoryPage({
                 {isOpen === DROPDOWN_KEYS.SORT && (
                   <div
                     ref={dropdownRef}
-                    className="absolute right-0 top-full mt-2 z-10 w-40 bg-white text-sm rounded-md shadow-lg"
+                    className="absolute right-0 top-full mt-2 z-10 w-44 bg-white text-sm rounded-md shadow-lg"
                   >
                     {sortKeys.map((key) => (
                       <div

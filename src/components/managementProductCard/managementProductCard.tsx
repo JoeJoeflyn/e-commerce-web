@@ -1,5 +1,5 @@
 import { Product } from "@/shared/interfaces";
-import { timeFormat } from "@/shared/utils";
+import { createMarkup, timeFormat } from "@/shared/utils";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import {
   faCircleInfo,
@@ -11,20 +11,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 
-const ProductCard = ({
+const ManagementProductCard = ({
   product,
-  toggleModal,
+  openModal,
   minIdImageIndex,
 }: {
   product: Product;
-  toggleModal: (id?: number) => void;
+  openModal: (id?: number) => void;
   minIdImageIndex: number;
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-3 bg-white my-3 border-[#e8e8e8] rounded-lg shadow">
     <div className="flex items-start p-3 gap-3 col-span-2">
       <div className="relative w-48 h-full">
         <Image
-          className="object-cover rounded-lg"
+          className="object-contain rounded-lg"
           src={
             product?.productImages?.[minIdImageIndex]?.url ||
             "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
@@ -42,7 +42,7 @@ const ProductCard = ({
             {new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
-            }).format(product.price - product.discountPrice)}
+            }).format(product.price - product.discount)}
           </p>
           <p className="text-[#707070] text-sm font-medium line-through">
             {new Intl.NumberFormat("en-US", {
@@ -77,12 +77,15 @@ const ProductCard = ({
             <FontAwesomeIcon width={16} icon={faCircleInfo} />
             Description
           </span>
-          <p className="text-sm line-clamp-3">{product.description}</p>
+          <p
+            className="text-sm line-clamp-3"
+            dangerouslySetInnerHTML={createMarkup(product.description)}
+          />
         </div>
       </div>
       <div className="grid grid-cols-3 gap-1 text-sm font-bold">
         <button
-          onClick={() => toggleModal(product?.id)}
+          onClick={() => openModal(product?.id)}
           className="px-3 py-2 text-white w-full text-center bg-sky-500 hover:bg-sky-600 rounded-xl"
         >
           <FontAwesomeIcon width={16} icon={faPen} />
@@ -101,4 +104,4 @@ const ProductCard = ({
   </div>
 );
 
-export default ProductCard;
+export default ManagementProductCard;

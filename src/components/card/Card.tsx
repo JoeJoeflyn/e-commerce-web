@@ -63,7 +63,7 @@ export default function Card({
                           {new Intl.NumberFormat("en-US", {
                             style: "currency",
                             currency: "USD",
-                          }).format(product.price - product.discountPrice)}
+                          }).format(product.price - product.discount)}
                         </p>
                         <p className="text-[#707070] text-sm font-medium line-through">
                           {new Intl.NumberFormat("en-US", {
@@ -108,7 +108,7 @@ export default function Card({
                       {new Intl.NumberFormat("en-US", {
                         style: "currency",
                         currency: "USD",
-                      }).format(product.price - product.discountPrice)}
+                      }).format(product.price - product.discount)}
                     </p>
                     <p className="text-[#707070] font-semibold text-sm line-through">
                       {new Intl.NumberFormat("en-US", {
