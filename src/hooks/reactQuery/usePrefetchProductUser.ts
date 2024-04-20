@@ -7,12 +7,14 @@ export default function usePrefetchProductUser(productId: number) {
   const { data: product, isFetching } = useQuery({
     queryKey: ["editProduct", productId],
     queryFn: () => getProduct(productId),
+    retry: 5,
     staleTime: STALE_TIME * 1000,
   });
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
+    retry: 5,
     staleTime: STALE_TIME * 1000,
   });
 

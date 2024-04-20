@@ -19,7 +19,7 @@ export default function Modal({
   formRef: React.MutableRefObject<FormikProps<any> | null>;
 }) {
   const cancelButtonRef = React.useRef(null);
-  const isMutating = useIsMutating();
+  const isMutating = useIsMutating({ mutationKey: ["createProduct"] });
 
   return (
     <Transition.Root show={open} as={React.Fragment}>

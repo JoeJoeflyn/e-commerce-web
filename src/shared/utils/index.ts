@@ -2,8 +2,7 @@ import moment from "moment";
 import { Product } from "../interfaces";
 
 export const timeFormat = (time: string) => {
-  // const currentTime = moment();
-  const targetTime = moment(time, "YYYY-MM-DD HH:mm:ss");
+  const targetTime = moment.utc(time, "YYYY-MM-DD HH:mm:ss").local();
 
   return targetTime.fromNow();
 };

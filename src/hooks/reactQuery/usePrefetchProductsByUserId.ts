@@ -15,6 +15,7 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
         userId,
         limit: LIMIT_PAGE,
       }),
+    retry: 5,
     staleTime: STALE_TIME * 1000,
   });
 
@@ -25,6 +26,7 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
         queryClient.prefetchQuery({
           queryKey: ["editProduct", product.id],
           queryFn: () => getProduct(product.id),
+          retry: 5,
           staleTime: STALE_TIME * 1000,
         });
       });
@@ -35,8 +37,11 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
 
   // Prefetch the next page!
   useEffect(() => {
-    if (page < totalPage) {
-      const prefetchPage = page + 1;
+    for (
+      let prefetchPage = page + 1;
+      prefetchPage <= totalPage;
+      prefetchPage++
+    ) {
       queryClient.prefetchQuery({
         queryKey: ["productsByUserId", prefetchPage, userId],
         queryFn: () =>
@@ -45,6 +50,7 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
             userId,
             limit: LIMIT_PAGE,
           }),
+        retry: 5,
         staleTime: STALE_TIME * 1000,
       });
     }

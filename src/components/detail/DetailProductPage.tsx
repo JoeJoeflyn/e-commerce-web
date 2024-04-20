@@ -3,6 +3,7 @@ import "@/app/globals.css";
 import { Product } from "@/shared/interfaces";
 import {
   avatarGenerateSplit,
+  createMarkup,
   generateRandomColor,
   timeFormat,
 } from "@/shared/utils";
@@ -116,7 +117,10 @@ export default function DetailPage({
                 <p className="text-2xl font-bold">
                   Description from the seller
                 </p>
-                <p className="text-base leading-5">{product?.description}</p>
+                <p
+                  className="text-base leading-5"
+                  dangerouslySetInnerHTML={createMarkup(product.description)}
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-2">

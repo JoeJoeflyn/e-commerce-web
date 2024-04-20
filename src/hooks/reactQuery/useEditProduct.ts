@@ -1,15 +1,8 @@
 import { updateProduct } from "@/api/";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export const useEditProduct = ({
-  userId,
-  closeModal,
-}: {
-  userId?: number;
-  closeModal: () => void;
-}) => {
+export const useEditProduct = ({ closeModal }: { closeModal: () => void }) => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
