@@ -170,6 +170,10 @@ export const getProduct = async (id: number) => {
       }
     );
 
+    if (!res.ok) {
+      throw new Error(`API call failed with status: ${res.status}`);
+    }
+
     const data = await res.json();
 
     return data;
@@ -211,6 +215,10 @@ export const getProductsByUserId = async (queryParams: {
         },
       }
     );
+
+    if (!res.ok) {
+      throw new Error(`API call failed with status: ${res.status}`);
+    }
 
     const data = await res.json();
 

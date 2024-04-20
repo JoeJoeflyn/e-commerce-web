@@ -5,6 +5,10 @@ export const getAllCategories = async () => {
       next: { tags: ["list-categories"] },
     });
 
+    if (!res.ok) {
+      throw new Error(`API call failed with status: ${res.status}`);
+    }
+
     const data = await res.json();
 
     return data;
