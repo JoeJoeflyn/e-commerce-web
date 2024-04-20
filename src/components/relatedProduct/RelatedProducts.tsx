@@ -19,7 +19,7 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
       <div className="flex flex-col gap-4 p-5">
         <div className="flex flex-col md:flex-row items-baseline justify-between gap-2">
           <div className="font-bold text-2xl">Explore related items</div>
-          <div className="flex items-center gap-5 text-black underline">
+          <div className="flex items-center gap-2 text-black underline">
             <Link href="#">Feedback on our suggestions</Link>
             <div className="bg-black h-3 w-0.5"></div>
             <Link href={`/category/${products?.[0]?.categoryId}`}>See all</Link>
@@ -76,7 +76,7 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
                         {product.name}
                       </div>
                       <div className="font-bold flex justify-between items-baseline gap-2">
-                        <p className="text-base font-bold">
+                        <p className="text-[#e44510] font-bold">
                           {new Intl.NumberFormat("en-US", {
                             style: "currency",
                             currency: "USD",

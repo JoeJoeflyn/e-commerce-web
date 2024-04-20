@@ -134,12 +134,17 @@ export function AccountDropdown({
                 Your orders
               </div>
               <div className="hover:bg-[#E8E8E8] p-3 flex items-center gap-2 cursor-pointer">
-                <FontAwesomeIcon
-                  className="bg-green-600 text-white rounded-full p-1.5"
-                  width={16}
-                  icon={faClipboardList}
-                />
-                Your purchases
+                <Link
+                  className="flex items-center gap-2 hover:text-gray-700 cursor-pointer h-full"
+                  href={`/management/${user?.id}`}
+                >
+                  <FontAwesomeIcon
+                    className="bg-green-600 text-white rounded-full p-1.5"
+                    width={16}
+                    icon={faClipboardList}
+                  />
+                  Management
+                </Link>
               </div>
             </div>
             <div>
