@@ -43,6 +43,7 @@ export default function Management() {
     <>
       <Modal mode="edit" formRef={formRef} open={open} closeModal={closeModal}>
         <FormItem
+          mode="edit"
           formRef={formRef}
           productId={productId}
           closeModal={closeModal}

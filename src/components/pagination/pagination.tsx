@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
 interface PaginationProps {
   page: number;
@@ -12,6 +13,14 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPage,
   setPage,
 }) => {
+  // UI effect when the last page only have 1 page but got deleted so it will go to previous page
+  React.useEffect(() => {
+    if (page > totalPage) {
+      setPage((prevPage) => Math.max(prevPage - 1, 1));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPage]);
+
   return (
     <div className="flex justify-center items-center gap-3 py-3 border-t">
       <button

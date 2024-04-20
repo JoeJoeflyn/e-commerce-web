@@ -16,6 +16,8 @@ export const createProduct = async (newProduct: {
 
   const formData = new FormData();
 
+  console.log(files);
+
   files.forEach((file) => {
     formData.append(`${file.name}`, file);
   });
@@ -27,6 +29,7 @@ export const createProduct = async (newProduct: {
       formData.append(key, valueToAppend);
     }
   });
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products`,
@@ -40,12 +43,10 @@ export const createProduct = async (newProduct: {
         body: formData,
       }
     );
-
     const data = await response.json();
     if (!response?.ok) {
       throw new Error(data?.error ?? "Server Error, Please try again later!");
     }
-
     return data;
   } catch (error) {
     throw error;
@@ -225,6 +226,31 @@ export const getProductsByUserId = async (queryParams: {
     return data;
   } catch (error) {
     return [];
+  }
+};
+
+export const deleteProduct = async (id: number) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          ...headers({
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          }),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Server responded with an error");
+    }
+
+    return;
+  } catch (error) {
+    throw error;
   }
 };
 

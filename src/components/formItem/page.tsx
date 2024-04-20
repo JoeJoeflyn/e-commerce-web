@@ -30,10 +30,12 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 export default function FormItem({
   formRef,
   productId,
+  mode,
   closeModal,
 }: {
   formRef: React.MutableRefObject<FormikProps<any> | null>;
   productId?: number;
+  mode: string;
   closeModal: () => void;
 }) {
   useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
@@ -43,10 +45,9 @@ export default function FormItem({
   const { previewImages, handleFileChange, handleRemoveImage } =
     useImageUploadHandler();
   const { mutate: editProduct } = useEditProduct({
-    userId: user?.id,
     closeModal,
   });
-  const { mutate: createProduct } = useCreateProduct();
+  const { mutate: createProduct } = useCreateProduct({ closeModal });
   const { product, productImages, formFields, isFetching } =
     usePrefetchProductUser(productId as number);
 
@@ -94,7 +95,7 @@ export default function FormItem({
             quantity: +values.quantity.replace(/,/g, ""),
           };
 
-          if (product?.product?.id) {
+          if (mode === "edit") {
             // Edit mode
             editProduct({
               ...payload,
@@ -147,7 +148,9 @@ export default function FormItem({
                         multiple
                         onChange={(e) => {
                           const files = Array.from(e.target.files as FileList);
-                          setFieldValue("files", files);
+                          const existedImages = [...values.files, ...files];
+
+                          setFieldValue("files", existedImages);
                           handleFileChange(e);
                         }}
                       />
@@ -217,6 +220,7 @@ export default function FormItem({
                       multiple
                       onChange={(e) => {
                         const files = Array.from(e.target.files as FileList);
+
                         setFieldValue("files", files);
                         handleFileChange(e);
                       }}
