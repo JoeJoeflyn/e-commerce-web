@@ -5,11 +5,12 @@ import { LIMIT_PAGE } from "@/shared/constants";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { page: number };
+  searchParams: { page: number; search: string };
 }) {
   const results = await Promise.allSettled([
     getAllCategories(),
     getProducts({
+      search: searchParams.search,
       page: searchParams.page || 1,
       limit: LIMIT_PAGE,
     }),

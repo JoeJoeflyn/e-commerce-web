@@ -18,14 +18,15 @@ import {
   Formik,
   FormikProps,
 } from "formik";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import React from "react";
 import { NumericFormat } from "react-number-format";
-import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import FormLoading from "../loading/formLoading";
 import ModalConfirmation from "../modalConfirmation/modalConfirmation";
 
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 export default function FormItem({
   formRef,
   productId,
