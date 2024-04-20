@@ -25,9 +25,6 @@ import { NumericFormat } from "react-number-format";
 import "react-quill/dist/quill.snow.css";
 import FormLoading from "../loading/formLoading";
 import ModalConfirmation from "../modalConfirmation/modalConfirmation";
-import dynamic from "next/dynamic";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 export default function FormItem({
