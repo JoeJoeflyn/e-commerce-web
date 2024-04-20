@@ -3,7 +3,6 @@ import { User } from "./../shared/interfaces/user";
 
 const useGetUser = () => {
   const [user, setUser] = React.useState<User>({} as User);
-
   React.useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {

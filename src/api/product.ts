@@ -114,6 +114,7 @@ export const getProducts = async (queryParams?: {
   sortOperation?: string;
 }) => {
   const searchParams = new URLSearchParams();
+  const categoryId = queryParams?.categoryId;
 
   const addParam = (key: string, value: any) => {
     if (value !== undefined && value !== null) {
@@ -129,11 +130,8 @@ export const getProducts = async (queryParams?: {
       }
     });
 
-  if (
-    Array.isArray(queryParams?.categoryId) &&
-    queryParams?.categoryId.length > 0
-  ) {
-    queryParams?.categoryId.forEach((item) =>
+  if (Array.isArray(categoryId) && categoryId.length > 0) {
+    categoryId.forEach((item) =>
       searchParams.append("category[]", item.toString())
     );
   }

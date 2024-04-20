@@ -22,6 +22,7 @@ import Link from "next/link";
 import React from "react";
 import useDropdowns from "@/hooks/useDropdowns";
 import { User } from "@/shared/interfaces/user";
+import dynamic from "next/dynamic";
 
 export function AccountDropdown({
   user,

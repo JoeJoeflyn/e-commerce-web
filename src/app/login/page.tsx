@@ -14,7 +14,6 @@ import { NAVIGATE_KEYS } from "@/shared/constants";
 
 export default function Login() {
   useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
-
   const [togglePassword, setTogglePassword] = React.useState(true);
 
   const mutationUser = useMutation({

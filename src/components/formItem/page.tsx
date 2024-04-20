@@ -21,10 +21,12 @@ import {
 import Image from "next/image";
 import React from "react";
 import { NumericFormat } from "react-number-format";
-import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import FormLoading from "../loading/formLoading";
 import ModalConfirmation from "../modalConfirmation/modalConfirmation";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function FormItem({
   formRef,
@@ -225,7 +227,6 @@ export default function FormItem({
               </div>
               <div className="md:col-span-2 grid gap-3">
                 {formFields.map((field) => {
-                  console.log(values);
                   return (
                     <div className="relative" key={field.name}>
                       {["price", "discount", "quantity"].includes(

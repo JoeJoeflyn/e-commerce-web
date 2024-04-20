@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-
 import { useMutation } from "@tanstack/react-query";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -11,15 +9,10 @@ import {
   faApple,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
 import { Field, Form, Formik } from "formik";
-
 import { SignupSchema } from "@/schema/schema";
-
 import { createAccount } from "@/api";
-
 import { toast } from "react-toastify";
-
 import { useRouter } from "next/navigation";
 
 export default function Signup() {
