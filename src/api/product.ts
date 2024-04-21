@@ -28,6 +28,10 @@ export const createProduct = async (newProduct: {
     }
   });
 
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}: ${value}`);
+  }
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products`,
