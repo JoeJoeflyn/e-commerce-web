@@ -1,5 +1,6 @@
 import ScrollToTop from "@/components/scroll/ScrollToTop";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Roboto } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,6 +8,10 @@ import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
 import Providers from "../providers/provider";
 import "./globals.css";
+
+const PostHogPageView = dynamic(() => import("./PostHogPageView"), {
+  ssr: false,
+});
 
 const roboto = Roboto({
   weight: "400",
@@ -33,6 +38,7 @@ export default function RootLayout({
         <ToastContainer />
         <ScrollToTop />
         <Providers>
+          <PostHogPageView />
           <Navbar />
           {children}
           <Footer />
