@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Home",
   description:
     "E-commerce where your business begins, you can list your items and purchase other users's items. Purchase & sell electronics, cars, clothes, collectibles & more on e-commerce, the world's online marketplace. Top brands, low prices & free shipping on many items.",
+  verification: {
+    google: "google",
+  },
 };
 
 export default function RootLayout({
