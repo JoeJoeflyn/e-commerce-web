@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "E-commerce where your business begins, you can list your items and purchase other users's items. Purchase & sell electronics, cars, clothes, collectibles & more on e-commerce, the world's online marketplace. Top brands, low prices & free shipping on many items.",
   verification: {
-    google: "google",
+    google: "h-krulVRrLSSg-fSeJVcQMGF_1XnEb8QYSyYGw6b_t4",
   },
 };
 
