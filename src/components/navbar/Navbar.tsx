@@ -146,6 +146,19 @@ export default function Navbar() {
                 Management
               </Link>
             </div>
+            <div
+              onClick={() => openModal()}
+              className="hover:text-gray-700 cursor-pointer"
+            >
+              <button
+                className={classNames(
+                  true ? "text-black" : "hover:bg-white",
+                  "block rounded-md py-2 px-3 text-base font-medium"
+                )}
+              >
+                Sell
+              </button>
+            </div>
           </div>
           <div className="border-t border-gray-200 pb-3 pt-4">
             <div className="mx-auto flex max-w-3xl items-center px-4 sm:px-6">
