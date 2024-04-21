@@ -18,7 +18,7 @@ export const useCreateProduct = ({
       closeModal();
     },
     onError(error: { message: string }) {
-      toast.error(error?.message);
+      toast.error("Failed to create product, check your internet connection");
     },
   });
 

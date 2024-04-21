@@ -16,8 +16,6 @@ export const createProduct = async (newProduct: {
 
   const formData = new FormData();
 
-  console.log(files);
-
   files.forEach((file) => {
     formData.append(`${file.name}`, file);
   });
