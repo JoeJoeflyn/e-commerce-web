@@ -1,19 +1,14 @@
 "use client";
-import React from "react";
-import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebook,
-  faGoogle,
-  faApple,
-} from "@fortawesome/free-brands-svg-icons";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Field, Form, Formik } from "formik";
-import { SignupSchema } from "@/schema/schema";
 import { createAccount } from "@/api";
-import { toast } from "react-toastify";
+import { SignupSchema } from "@/schema/schema";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMutation } from "@tanstack/react-query";
+import { Field, Form, Formik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const router = useRouter();

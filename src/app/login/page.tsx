@@ -1,16 +1,16 @@
 "use client";
+import { login } from "@/api";
+import useNavigate from "@/hooks/useNavigate";
+import { LoginSchema } from "@/schema/schema";
+import { NAVIGATE_KEYS } from "@/shared/constants";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMutation } from "@tanstack/react-query";
+import { Field, Form, Formik } from "formik";
 import Link from "next/link";
 import React from "react";
 import { SyncLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Field, Form, Formik } from "formik";
-import { login } from "@/api";
-import { LoginSchema } from "@/schema/schema";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useMutation } from "@tanstack/react-query";
-import useNavigate from "@/hooks/useNavigate";
-import { NAVIGATE_KEYS } from "@/shared/constants";
 
 export default function Login() {
   useNavigate(NAVIGATE_KEYS.AUTHENTICATED);

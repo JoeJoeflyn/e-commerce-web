@@ -1,7 +1,7 @@
 "use client";
 import FormItem from "@/components/formItem/page";
 import ManagementLoading from "@/components/loading/managementLoading";
-import ManagementProductCard from "@/components/managementProductCard/managementProductCard";
+import ManagementCard from "@/components/management/managementCard";
 import Modal from "@/components/modal/modal";
 import Pagination from "@/components/pagination/pagination";
 import { usePrefetchProductsByUserId } from "@/hooks/reactQuery/usePrefetchProductsByUserId";
@@ -90,7 +90,7 @@ export default function Management() {
           : data?.products?.map((product: Product, index: number) => {
               const minIdImageIndex = minIdIndices?.[index];
               return (
-                <ManagementProductCard
+                <ManagementCard
                   key={product?.id}
                   product={product}
                   openModal={openModal}

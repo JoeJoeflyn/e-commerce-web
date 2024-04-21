@@ -3,6 +3,15 @@ import DetailProductPage from "@/components/detail/DetailProductPage";
 import { LIMIT_PAGE } from "@/shared/constants";
 import { Product } from "@/shared/interfaces";
 
+export async function generateMetadata({ params }: { params: { id: number } }) {
+  const { product } = await getProduct(params.id);
+
+  return {
+    title: product?.name,
+    description: product?.description,
+  };
+}
+
 export async function generateStaticParams() {
   const { products } = await getProducts();
 
@@ -11,6 +20,7 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: { params: { id: number } }) {
   const { product } = await getProduct(params.id);
+  console.log(product);
 
   const { products } = await getProducts({
     limit: LIMIT_PAGE,

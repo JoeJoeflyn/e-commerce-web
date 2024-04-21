@@ -15,7 +15,7 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
         userId,
         limit: LIMIT_PAGE,
       }),
-    retry: 5,
+    retry: 10,
     staleTime: STALE_TIME * 1000,
   });
 
@@ -26,7 +26,7 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
         queryClient.prefetchQuery({
           queryKey: ["editProduct", product.id],
           queryFn: () => getProduct(product.id),
-          retry: 5,
+          retry: 10,
           staleTime: STALE_TIME * 1000,
         });
       });
@@ -50,7 +50,7 @@ export const usePrefetchProductsByUserId = (page: number, userId: number) => {
             userId,
             limit: LIMIT_PAGE,
           }),
-        retry: 5,
+        retry: 10,
         staleTime: STALE_TIME * 1000,
       });
     }
