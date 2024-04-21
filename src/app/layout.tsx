@@ -35,9 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} bg-[#f4f4f4]`}>
-        <ToastContainer />
-        <ScrollToTop />
         <Providers>
+          <ToastContainer />
+          <ScrollToTop />
           <PostHogPageView />
           <Navbar />
           {children}

@@ -93,7 +93,7 @@ export default function DetailPage({
               onIndexChange={setIndex}
             />
             <div className="bg-black opacity-70 w-full text-white text-right p-0.5">
-              <p className="mr-2">Posted at {timeFormat(product?.createdAt)}</p>
+              <p className="mr-2">Posted {timeFormat(product?.createdAt)}</p>
             </div>
           </Swiper>
           <div>
