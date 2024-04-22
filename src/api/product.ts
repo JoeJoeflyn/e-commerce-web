@@ -25,12 +25,8 @@ export const createProduct = async (newProduct: {
   });
 
   files.forEach((file) => {
-    formData.append(`${file.name}`, file);
+    formData.append("images", file);
   });
-
-  for (let [key, value] of formData.entries()) {
-    console.log(`${key}: ${value}`);
-  }
 
   try {
     const response = await fetch(
