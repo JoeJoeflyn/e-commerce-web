@@ -25,7 +25,7 @@ export const createProduct = async (newProduct: {
   });
 
   files.forEach((file) => {
-    formData.append("images", file);
+    formData.append(`${file.name}`, file);
   });
 
   try {

@@ -228,10 +228,10 @@ export default function FormItem({
                   </div>
                 )}
               </div>
-              <div className="md:col-span-2 grid gap-3">
+              <div className="md:col-span-2">
                 {formFields.map((field) => {
                   return (
-                    <div className="relative" key={field.name}>
+                    <div className="relative mb-2.5" key={field.name}>
                       {["price", "discount", "quantity"].includes(
                         field.name
                       ) ? (
@@ -337,9 +337,20 @@ export default function FormItem({
                         {field.name.charAt(0).toUpperCase() +
                           field.name.slice(1)}
                       </label>
+                      <div
+                        className={`text-red-500 text-start text-sm h-5 ${
+                          (errors as { [key: string]: any })[field.name] &&
+                          (touched as { [key: string]: any })[field.name] &&
+                          "hidden"
+                        }`}
+                      ></div>
                       <ErrorMessage name={field.name}>
                         {(msg) => (
-                          <div className="text-red-500 text-start mt-1">
+                          <div
+                            className={`text-red-500 text-start text-sm ${
+                              field.name === "description" ? "mt-2" : ""
+                            }`}
+                          >
                             {msg}
                           </div>
                         )}

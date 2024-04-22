@@ -9,10 +9,8 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useIsMutating } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { PulseLoader } from "react-spinners";
 
 const ManagementProductCard = ({
   product,
@@ -24,7 +22,6 @@ const ManagementProductCard = ({
   minIdImageIndex: number;
 }) => {
   const { mutate } = useDeleteProduct();
-  const isMutating = useIsMutating({ mutationKey: ["deleteProduct"] });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 bg-white my-3 border-[#e8e8e8] rounded-lg shadow">
@@ -107,11 +104,7 @@ const ManagementProductCard = ({
             onClick={() => mutate(product?.id)}
             className="px-3 py-2 text-white bg-red-500 hover:bg-red-700 rounded-xl"
           >
-            {isMutating ? (
-              <PulseLoader size={16} />
-            ) : (
-              <FontAwesomeIcon width={16} icon={faTrash} />
-            )}
+            <FontAwesomeIcon width={16} icon={faTrash} />
           </button>
         </div>
       </div>

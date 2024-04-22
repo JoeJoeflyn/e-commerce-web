@@ -17,10 +17,12 @@ import {
 } from "@/shared/utils";
 import { faPlus, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useIsMutating } from "@tanstack/react-query";
 import { FormikProps } from "formik";
 import { useParams } from "next/navigation";
 import React from "react";
 import "react-loading-skeleton/dist/skeleton.css";
+import { BarLoader } from "react-spinners";
 
 export default function Management() {
   useNavigate(NAVIGATE_KEYS.AUTHENTICATED);
@@ -33,6 +35,7 @@ export default function Management() {
     page,
     +params?.id
   );
+  const isMutating = useIsMutating({ mutationKey: ["deleteProduct"] });
 
   const minIdIndices = React.useMemo(
     () => minIdImageIndices(data?.products),
@@ -79,10 +82,11 @@ export default function Management() {
             <p>Your list items</p>
           </div>
         </div>
-        {data?.error && <p className="bg-white text-base p-3">{data?.error}</p>}
-        {data?.length && (
-          <p className="bg-white text-base p-3">List some product</p>
+
+        {data?.total === 0 && (
+          <p className="bg-white text-lg p-3 h-screen">List some product</p>
         )}
+        {isMutating ? <BarLoader width="100%" /> : ""}
         {isLoading
           ? Array(5)
               .fill(null)

@@ -33,7 +33,7 @@ export default function Login() {
       }, 1000);
     },
     onError(error: { message: string }) {
-      toast.error(error?.message);
+      toast.error("Failed to login, check your network");
     },
   });
 
