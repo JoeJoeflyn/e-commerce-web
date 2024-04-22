@@ -1,7 +1,6 @@
 import { headers } from "./config";
 
 export const createProduct = async (newProduct: {
-  files: File[];
   categoryId: string;
   userId: string;
   name: string;
@@ -11,14 +10,11 @@ export const createProduct = async (newProduct: {
   quantity: number;
   contact: string;
   location: string;
+  files: File[];
 }) => {
   const { files, ...product } = newProduct;
 
   const formData = new FormData();
-
-  files.forEach((file) => {
-    formData.append(`${file.name}`, file);
-  });
 
   Object.entries(product).forEach(([key, value]) => {
     if (value !== null && value !== undefined) {
@@ -26,6 +22,10 @@ export const createProduct = async (newProduct: {
         typeof value === "number" ? value.toString() : value;
       formData.append(key, valueToAppend);
     }
+  });
+
+  files.forEach((file) => {
+    formData.append(`${file.name}`, file);
   });
 
   for (let [key, value] of formData.entries()) {
